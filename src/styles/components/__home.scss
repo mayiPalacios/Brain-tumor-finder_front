@@ -1,0 +1,20 @@
+.container__page--info {
+  background-image: url("https://i.pinimg.com/564x/4c/09/1d/4c091d7a0c3573804a98ea0cb60d83aa.jpg");
+  background-repeat: no-repeat;
+  margin-top: 9vh;
+  height: 90vh;
+  width: 90%;
+  background-size: contain;
+  background-position: center;
+  h2,
+  h1 {
+    color: #ffc107;
+  }
+  p {
+    color: #fff;
+  }
+}
+
+.pyramid-text {
+  margin-top: 12vh;
+}

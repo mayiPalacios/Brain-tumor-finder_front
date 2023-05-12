@@ -1,95 +1,47 @@
-import Image from 'next/image'
-import styles from './page.module.css'
+import Navbar from "@/components/navbar";
+import { Left } from "react-bootstrap/lib/Media";
 
 export default function Home() {
   return (
-    <main className={styles.main}>
-      <div className={styles.description}>
-        <p>
-          Get started by editing&nbsp;
-          <code className={styles.code}>src/app/page.tsx</code>
-        </p>
-        <div>
-          <a
-            href="https://vercel.com?utm_source=create-next-app&utm_medium=appdir-template&utm_campaign=create-next-app"
-            target="_blank"
-            rel="noopener noreferrer"
-          >
-            By{' '}
-            <Image
-              src="/vercel.svg"
-              alt="Vercel Logo"
-              className={styles.vercelLogo}
-              width={100}
-              height={24}
-              priority
-            />
-          </a>
+    <main>
+      <Navbar />
+      <section className="container__page--info ">
+        <div
+          className="ml-3 d-flex align-items-center justify-content-center"
+          style={{ width: "100%", marginLeft: "32px" }}
+        >
+          <h1>Tu salud esta en buenas manos</h1>
         </div>
-      </div>
 
-      <div className={styles.center}>
-        <Image
-          className={styles.logo}
-          src="/next.svg"
-          alt="Next.js Logo"
-          width={180}
-          height={37}
-          priority
-        />
-      </div>
-
-      <div className={styles.grid}>
-        <a
-          href="https://beta.nextjs.org/docs?utm_source=create-next-app&utm_medium=appdir-template&utm_campaign=create-next-app"
-          className={styles.card}
-          target="_blank"
-          rel="noopener noreferrer"
+        <div
+          className="d-flex flex-column-reverse align-items-end gap-4"
+          style={{ width: "100%" }}
         >
-          <h2>
-            Docs <span>-&gt;</span>
-          </h2>
-          <p>Find in-depth information about Next.js features and API.</p>
-        </a>
-
-        <a
-          href="https://nextjs.org/learn?utm_source=create-next-app&utm_medium=appdir-template&utm_campaign=create-next-app"
-          className={styles.card}
-          target="_blank"
-          rel="noopener noreferrer"
-        >
-          <h2>
-            Learn <span>-&gt;</span>
-          </h2>
-          <p>Learn about Next.js in an interactive course with&nbsp;quizzes!</p>
-        </a>
-
-        <a
-          href="https://vercel.com/templates?framework=next.js&utm_source=create-next-app&utm_medium=appdir-template&utm_campaign=create-next-app"
-          className={styles.card}
-          target="_blank"
-          rel="noopener noreferrer"
-        >
-          <h2>
-            Templates <span>-&gt;</span>
-          </h2>
-          <p>Explore the Next.js 13 playground.</p>
-        </a>
-
-        <a
-          href="https://vercel.com/new?utm_source=create-next-app&utm_medium=appdir-template&utm_campaign=create-next-app"
-          className={styles.card}
-          target="_blank"
-          rel="noopener noreferrer"
-        >
-          <h2>
-            Deploy <span>-&gt;</span>
-          </h2>
-          <p>
-            Instantly deploy your Next.js site to a shareable URL with Vercel.
-          </p>
-        </a>
-      </div>
+          <div className="text-center pyramid-text d-flex flex-column gap-4 ">
+            <h2
+              style={{
+                width: "588px",
+                height: "133px",
+              }}
+            >
+              No dejes que los tumores cerebrales te tomen por sorpresa: La IA
+              te ayuda a detectar tumores cerebrales de temprana.
+            </h2>
+            <p
+              style={{
+                width: "588px",
+                height: "133px",
+              }}
+            >
+              La deteccion de tumores cerebrales mediante imagenes es un campo
+              de investigacion en constante evolucion, y la aplicacion de
+              tecnicas de Inteligencia Artificial IA en el area de la salud ha
+              demostrado ser una herramienta prometedora para la precision y
+              velciodad del diagnosticos
+            </p>
+          </div>
+        </div>
+      </section>
     </main>
-  )
+  );
 }
