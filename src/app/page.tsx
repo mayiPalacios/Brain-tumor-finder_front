@@ -1,7 +1,7 @@
 import Footer from "@/components/footer";
 import Navbar from "@/components/navbar";
 import Image from "next/image";
-import { Left } from "react-bootstrap/lib/Media";
+
 
 export default function Home() {
   return (
