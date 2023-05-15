@@ -58,6 +58,11 @@ const Navbar = () => {
                 Contact us
               </a>
             </li>
+            <li className="nav-item">
+              <a className="nav-link" href="/movie">
+                Record
+              </a>
+            </li>
           </ul>
           <div className="navbar-nav">
             <a className="nav-link" href="/login">
