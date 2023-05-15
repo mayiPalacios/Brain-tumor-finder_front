@@ -1,8 +1,9 @@
 @import "~bootstrap/scss/bootstrap";
 @import "./components/header";
-@import "./components/_home";
+@import "./components/home";
 @import "./components/footer";
 @import "./components/contact";
+@import "./components/try";
 body {
   background-color: #010431;
 }
