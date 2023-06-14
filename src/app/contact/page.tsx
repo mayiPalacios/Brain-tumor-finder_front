@@ -1,7 +1,7 @@
 import Navbar from "@/components/navbar";
 import { memo } from "react";
 import Image from "next/image";
-console.log("Rendering Navbar");
+
 const page = ({}) => {
   return (
     <div className="container__main">

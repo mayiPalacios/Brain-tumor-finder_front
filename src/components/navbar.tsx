@@ -2,15 +2,23 @@
 import { useEffect, useState } from "react";
 import $ from "jquery";
 import Image from "next/image";
+import { useRouter } from "next/navigation";
+import useAuth from "@/hooks/useAuth";
 
 const Navbar = () => {
   const [showNav, setShowNav] = useState(false);
-
+  const isLoggedIn = useAuth();
+  const router = useRouter();
   useEffect(() => {
     $(".navbar-toggler").click(function () {
       setShowNav(!showNav);
     });
   }, [showNav]);
+
+  const handleLogout = () => {
+    localStorage.removeItem("loginToken");
+    router.push("/login");
+  };
 
   return (
     <div className=" navContainer navbar navbar-expand-lg navbar-dark fixed-top navbar-custom">
@@ -46,32 +54,46 @@ const Navbar = () => {
                 Home
               </a>
             </li>
+            {isLoggedIn ? (
+              <li className="nav-item active">
+                <a className="nav-link" href="/try">
+                  Try
+                </a>
+              </li>
+            ) : (
+              ""
+            )}
 
-            <li className="nav-item active">
-              <a className="nav-link" href="/try">
-                Try
-              </a>
-            </li>
-
-            <li className="nav-item">
-              <a className="nav-link" href="/contact">
-                Contact us
-              </a>
-            </li>
-            <li className="nav-item">
-              <a className="nav-link" href="/#">
-                Record
-              </a>
-            </li>
+            {isLoggedIn ? (
+              <li className="nav-item">
+                <a className="nav-link" href="/contact">
+                  Contact us
+                </a>
+              </li>
+            ) : (
+              ""
+            )}
           </ul>
-          <div className="navbar-nav">
-            <a className="nav-link" href="/singup">
-              Sign up
-            </a>
-            <a className="nav-link" href="/login">
-              Login
-            </a>
-          </div>
+
+          {isLoggedIn ? (
+            <div className="navbar-nav">
+              <a className="nav-link" href="/login" onClick={handleLogout}>
+                Logout
+              </a>
+              <a className="nav-link" href="/meDetails">
+                Register
+              </a>
+            </div>
+          ) : (
+            <div className="navbar-nav">
+              <a className="nav-link" href="/singup">
+                Sign up
+              </a>
+              <a className="nav-link" href="/login">
+                Login
+              </a>
+            </div>
+          )}
         </div>
       </div>
     </div>
