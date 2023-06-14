@@ -1,9 +1,9 @@
 import Image from "next/image";
-import { Row, Col } from 'react-bootstrap';
+import { Row, Col } from "react-bootstrap";
 
 const Footer = () => {
-    return (
-      <footer>
+  return (
+    <footer>
       <div className="container-fluid py-3 pt-4 text-white">
         <div className="row">
           <div className="col-12 ml-3">
@@ -20,7 +20,7 @@ const Footer = () => {
         </div>
       </div>
     </footer>
-    );
-  };
-  
-  export default Footer;
+  );
+};
+
+export default Footer;
