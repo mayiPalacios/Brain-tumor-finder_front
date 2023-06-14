@@ -18,8 +18,9 @@ const Page = ({}) => {
     };
     try {
       const response: IloginSuccess | undefined = await postLogin(user);
-
-      localStorage.setItem("loginToken", response.access_token);
+      if (response) {
+        localStorage.setItem("loginToken", response.access_token);
+      }
 
       router.push("/");
     } catch (error) {
