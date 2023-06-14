@@ -1,0 +1,29 @@
+.container__login {
+  /*display: flex;
+  justify-content: center;
+  align-items: center;
+  gap: 100px;
+  margin-top: 4em;*/
+}
+
+.form__login {
+  display: flex;
+  flex-direction: column;
+
+  input {
+    background-color: #25324d;
+    color: #fff;
+  }
+  label,
+  h2 {
+    color: rgba(240, 188, 77, 0.9);
+    font-size: 48px;
+  }
+  label {
+    font-size: 16px;
+  }
+  button {
+    background-color: rgba(240, 188, 77, 0.9);
+    width: 100px;
+  }
+}

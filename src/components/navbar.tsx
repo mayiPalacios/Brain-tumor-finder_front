@@ -13,7 +13,7 @@ const Navbar = () => {
   }, [showNav]);
 
   return (
-    <nav className="navbar navbar-expand-lg navbar-dark fixed-top navbar-custom">
+    <div className=" navContainer navbar navbar-expand-lg navbar-dark fixed-top navbar-custom">
       <div className="container">
         <a className="navbar-brand d-flex align-items-center" href="/">
           <Image
@@ -65,13 +65,16 @@ const Navbar = () => {
             </li>
           </ul>
           <div className="navbar-nav">
+            <a className="nav-link" href="/singup">
+              Sign up
+            </a>
             <a className="nav-link" href="/login">
               Login
             </a>
           </div>
         </div>
       </div>
-    </nav>
+    </div>
   );
 };
 export default Navbar;
