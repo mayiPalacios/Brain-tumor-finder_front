@@ -7,6 +7,7 @@ const nextConfig = {
       "lh3.googleusercontent.com",
       "www.signpost.com",
       "encrypted-tbn2.gstatic.com",
+      "as.com",
     ],
   },
 };

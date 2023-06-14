@@ -2,12 +2,11 @@
   "name": "braintest",
   "version": "0.1.0",
   "private": true,
-   "scripts": {
+  "scripts": {
     "dev": "next dev",
     "build": "next build",
     "start": "next start",
     "lint": "eslint src --ext .tsx"
-  
   },
   "dependencies": {
     "@fortawesome/fontawesome-svg-core": "^6.4.0",

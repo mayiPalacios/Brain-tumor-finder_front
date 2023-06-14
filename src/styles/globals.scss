@@ -4,6 +4,10 @@
 @import "./components/footer";
 @import "./components/contact";
 @import "./components/try";
+@import "./components/login";
 body {
   background-color: #010431;
+}
+label {
+  color: #f7b114;
 }

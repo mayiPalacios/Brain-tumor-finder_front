@@ -1,39 +1,9 @@
 "use client";
 import Navbar from "@/components/navbar";
-import { memo, useState } from "react";
+import { memo } from "react";
 import Image from "next/image";
-import { postLogin } from "@/tools/axiosMethod";
-import { IloginPost, IloginSuccess } from "@/interfaces/login";
-import { useRouter } from "next/navigation";
 
 const Page = ({}) => {
-  const [email, setEmail] = useState("");
-  const [password, setPassword] = useState("");
-  const router = useRouter();
-
-  const handleGetToken = async () => {
-    const user: IloginPost = {
-      email: email,
-      password: password,
-    };
-    try {
-      const response: IloginSuccess | undefined = await postLogin(user);
-
-      localStorage.setItem("loginToken", response.access_token);
-
-      router.push("/");
-    } catch (error) {
-      throw error;
-    }
-  };
-
-  const handleLogin = (
-    event: React.MouseEvent<HTMLButtonElement, MouseEvent>
-  ) => {
-    event.preventDefault();
-    handleGetToken();
-  };
-
   return (
     <div className="container-fluid p-0">
       <Navbar />
@@ -65,33 +35,71 @@ const Page = ({}) => {
             </div>
           </div>
         </div>
+
         <div className="col-md-6 p-0">
           <div className="d-flex align-items-center justify-content-center h-100">
             <form className="form__login   gap-4">
               <div className="w-100 d-flex align-items-center justify-content-center">
-                <h2 className="">Login</h2>
+                <h2 className="">Register</h2>
+              </div>
+
+              <div className="d-flex gap-5">
+                <div className="d-flex flex-column gap-3">
+                  <label htmlFor="">firts name</label>
+                  <input type="text" />
+                </div>
+                <div className="d-flex flex-column gap-3">
+                  <label htmlFor="">firts lastname</label>
+                  <input type="text" />
+                </div>
               </div>
 
               <label htmlFor="">Email</label>
               <input
                 type="email"
                 style={{ padding: "6px, 9px, 6px, 9px", width: "501px" }}
-                onChange={(e) => {
-                  setEmail(e.target.value);
-                }}
               />
-              <label htmlFor="">Password</label>
+              <div className="d-flex gap-3">
+                <br />
+                <input name="intereses" type="radio" value="rbipeliculas" />
+                <label>F</label>
+                <br />
+                <input
+                  name="intereses"
+                  style={{ color: "#F7B114" }}
+                  type="radio"
+                  value="rbilibros"
+                />
+                <label>M</label>
+              </div>
+
+              <label htmlFor="">Doctors cards</label>
               <input
-                type="password"
-                onChange={(e) => {
-                  setPassword(e.target.value);
-                }}
+                type="text"
                 style={{ padding: "6px, 9px, 6px, 9px", width: "501px" }}
               />
+
+              <div className="d-flex flex-column gap-3">
+                <label htmlFor="">Country</label>
+                <input
+                  type="password"
+                  style={{ padding: "6px, 9px, 6px, 9px", width: "501px" }}
+                />
+              </div>
+
+              <div className="d-flex gap-5">
+                <div className="d-flex flex-column gap-3">
+                  <label htmlFor="">Password</label>
+                  <input type="password" />
+                </div>
+                <div className="d-flex flex-column gap-3">
+                  <label htmlFor="">password confirmation</label>
+                  <input type="password" />
+                </div>
+              </div>
+
               <div className="w-100 d-flex align-items-center justify-content-center">
-                <button className="btn btn__login" onClick={handleLogin}>
-                  Login
-                </button>
+                <button className="btn btn__login">Register</button>
               </div>
             </form>
           </div>
