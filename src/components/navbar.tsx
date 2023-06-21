@@ -17,7 +17,6 @@ const Navbar = () => {
 
   const handleLogout = () => {
     localStorage.removeItem("loginToken");
-    router.push("/login");
   };
 
   return (
@@ -80,7 +79,7 @@ const Navbar = () => {
               <a className="nav-link" href="/login" onClick={handleLogout}>
                 Logout
               </a>
-              <a className="nav-link" href="/meDetails">
+              <a className="nav-link" href="/register">
                 Register
               </a>
             </div>

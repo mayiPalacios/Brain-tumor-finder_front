@@ -1,0 +1,42 @@
+.container__register {
+  width: 100%;
+  h2 {
+    color: rgba(240, 188, 77, 0.9);
+  }
+  .container__tittle {
+    width: 100%;
+    display: flex;
+    justify-content: center;
+    align-items: center;
+  }
+}
+
+.btn_approved_denied {
+  background: none;
+  border: none;
+  padding: 0;
+  cursor: pointer;
+  img {
+    height: 52px;
+  }
+}
+
+.container__results {
+  input,
+  select {
+    width: 22vw;
+    background-color: #25324d;
+    color: #fff;
+  }
+
+  textarea {
+    background-color: #25324d;
+    color: #fff;
+    height: 22vh;
+  }
+}
+
+.btn__register {
+  width: 8vw;
+  background-color: #25324d;
+}

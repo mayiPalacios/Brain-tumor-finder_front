@@ -9,6 +9,7 @@ import { useRouter } from "next/navigation";
 const Page = ({}) => {
   const [email, setEmail] = useState("");
   const [password, setPassword] = useState("");
+
   const router = useRouter();
 
   const handleGetToken = async () => {
@@ -16,13 +17,16 @@ const Page = ({}) => {
       email: email,
       password: password,
     };
+
     try {
-      const response: IloginSuccess | undefined = await postLogin(user);
+      const formData = new FormData();
+      formData.append("username", email);
+      formData.append("password", password);
+      const response: IloginSuccess | undefined = await postLogin(formData);
       if (response) {
         localStorage.setItem("loginToken", response.access_token);
+        router.push("/try");
       }
-
-      router.push("/");
     } catch (error) {
       throw error;
     }
