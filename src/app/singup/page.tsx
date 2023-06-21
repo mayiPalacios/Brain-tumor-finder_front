@@ -1,9 +1,78 @@
 "use client";
 import Navbar from "@/components/navbar";
-import { memo } from "react";
+import { memo, useState } from "react";
 import Image from "next/image";
+import { Isingup, IsingupSucces } from "@/interfaces/singup";
+import { postRegister } from "@/tools/axiosMethod";
+import { useRouter } from "next/navigation";
 
 const Page = ({}) => {
+  const [email, setEmail] = useState("");
+  const [password, setPassword] = useState("");
+  const [firtsName, setName] = useState("");
+  const [lastname, setLname] = useState("");
+  const [correctPass, setCorrectPass] = useState(false);
+  const [error, setError] = useState<Error>();
+  const [succesRegister, setSuccesR] = useState(false);
+  const [isLoading, setIsLoading] = useState(false);
+  const [carnet, setCarnet] = useState("");
+  const [country, setCountry] = useState("");
+  const [confirmPass, setConfirmP] = useState("");
+
+  const router = useRouter();
+
+  const handleSingup = async () => {
+    const user: Isingup = {
+      email: email,
+      first_name: firtsName,
+      last_name: lastname,
+      carnet: carnet,
+      country: country,
+      password: password,
+    };
+
+    setIsLoading(true);
+    try {
+      const response: IsingupSucces | undefined = await postRegister(user);
+      if (response) {
+        return setSuccesR(true);
+      }
+    } catch (error) {
+      if (error instanceof Error) console.log(error);
+    }
+    setIsLoading(false);
+  };
+
+  const handleClickRegister = (
+    event: React.MouseEvent<HTMLButtonElement, MouseEvent>
+  ) => {
+    event.preventDefault();
+    if (password === confirmPass) {
+      handleSingup();
+    } else {
+      setCorrectPass(true);
+    }
+  };
+
+  const AlertSave = () => {
+    return (
+      <div className="container__alert">
+        <div className="alert__content" id="cookiesPopup">
+          <img
+            src="https://i.pinimg.com/564x/63/7e/44/637e44cee0481fd0318bb51275eba53a.jpg"
+            alt="cookies-img"
+          />
+          <p>Succesful register</p>
+          <div>
+            <button className="btn__accept" onClick={() => setSuccesR(false)}>
+              Ok
+            </button>
+          </div>
+        </div>
+      </div>
+    );
+  };
+
   return (
     <div className="container-fluid p-0">
       <Navbar />
@@ -38,6 +107,7 @@ const Page = ({}) => {
 
         <div className="col-md-6 p-0">
           <div className="d-flex align-items-center justify-content-center h-100">
+            {succesRegister && <AlertSave />}
             <form className="form__login   gap-4">
               <div className="w-100 d-flex align-items-center justify-content-center">
                 <h2 className="">Register</h2>
@@ -46,17 +116,24 @@ const Page = ({}) => {
               <div className="d-flex gap-5">
                 <div className="d-flex flex-column gap-3">
                   <label htmlFor="">firts name</label>
-                  <input type="text" />
+                  <input
+                    type="text"
+                    onChange={(e) => setName(e.target.value)}
+                  />
                 </div>
                 <div className="d-flex flex-column gap-3">
                   <label htmlFor="">firts lastname</label>
-                  <input type="text" />
+                  <input
+                    type="text"
+                    onChange={(e) => setLname(e.target.value)}
+                  />
                 </div>
               </div>
 
               <label htmlFor="">Email</label>
               <input
                 type="email"
+                onChange={(e) => setEmail(e.target.value)}
                 style={{ padding: "6px, 9px, 6px, 9px", width: "501px" }}
               />
               <div className="d-flex gap-3">
@@ -77,29 +154,51 @@ const Page = ({}) => {
               <input
                 type="text"
                 style={{ padding: "6px, 9px, 6px, 9px", width: "501px" }}
+                onChange={(e) => setCarnet(e.target.value)}
               />
 
               <div className="d-flex flex-column gap-3">
                 <label htmlFor="">Country</label>
                 <input
-                  type="password"
+                  type="text"
                   style={{ padding: "6px, 9px, 6px, 9px", width: "501px" }}
+                  onChange={(e) => {
+                    setCountry(e.target.value);
+                  }}
                 />
               </div>
 
               <div className="d-flex gap-5">
                 <div className="d-flex flex-column gap-3">
                   <label htmlFor="">Password</label>
-                  <input type="password" />
+                  <input
+                    type="password"
+                    onChange={(e) => setPassword(e.target.value)}
+                  />
                 </div>
                 <div className="d-flex flex-column gap-3">
                   <label htmlFor="">password confirmation</label>
-                  <input type="password" />
+                  <input
+                    type="password"
+                    onChange={(e) => setConfirmP(e.target.value)}
+                  />
+                  <p
+                    style={{ color: "#fff" }}
+                    className={` ${correctPass ? "" : "alert-input"}  `}
+                  >
+                    Its different password
+                  </p>
                 </div>
               </div>
 
               <div className="w-100 d-flex align-items-center justify-content-center">
-                <button className="btn btn__login">Register</button>
+                <button
+                  className="btn btn__login"
+                  type="submit"
+                  onClick={(e) => handleClickRegister(e)}
+                >
+                  Register
+                </button>
               </div>
             </form>
           </div>
@@ -109,4 +208,4 @@ const Page = ({}) => {
   );
 };
 
-export default Page;
+export default memo(Page);
