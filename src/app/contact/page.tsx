@@ -1,13 +1,11 @@
 "use client";
-import { useState } from "react";
 import Navbar from "@/components/navbar";
-import { memo } from "react";
+import { memo, useState } from "react";
 import Image from "next/image";
 import { IContactUsPost } from "@/interfaces/contact-us";
 import { postContactUs } from "@/tools/axiosMethod";
-import { AuthProvider } from "@/contexts/AuthContext";
 
-const page = ({ }) => {
+const Page = ({ }) => {
   const [subject, setSubject] = useState("");
   const [content, setContent] = useState("");
   const [name, setName] = useState("");
@@ -104,4 +102,4 @@ const page = ({ }) => {
   );
 };
 
-export default memo(page);
+export default memo(Page);
