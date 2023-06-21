@@ -1,6 +1,12 @@
 import { IloginPost, IloginSuccess } from "@/interfaces/login";
 import { get, post } from "./axiosConnect";
-import axios from "axios";
+import axios, { AxiosResponse } from "axios";
+import {
+  IContactUsPost,
+  IContactUsPostResponse,
+} from "@/interfaces/contact-us";
+// const BASE_URL = `https://btf-image-analyzer-api-production.up.railway.app`;
+const BASE_URL = `http://localhost:8000`;
 
 export const postLogin = async (userData: IloginPost) => {
   try {
@@ -11,5 +17,20 @@ export const postLogin = async (userData: IloginPost) => {
     return req.data;
   } catch (error) {
     console.log(error);
+  }
+};
+
+export const postContactUs = async (
+  contactUsDto: IContactUsPost
+): Promise<IContactUsPostResponse> => {
+  try {
+    const response = await axios.post<
+      IContactUsPostResponse,
+      AxiosResponse<IContactUsPostResponse>
+    >(`${BASE_URL}/api/v1/contact`, contactUsDto);
+    return response.data;
+  } catch (error) {
+    console.error(error);
+    return { success: false };
   }
 };
