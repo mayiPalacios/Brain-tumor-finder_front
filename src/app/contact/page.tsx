@@ -5,6 +5,7 @@ import { memo } from "react";
 import Image from "next/image";
 import { IContactUsPost } from "@/interfaces/contact-us";
 import { postContactUs } from "@/tools/axiosMethod";
+import { AuthProvider } from "@/contexts/AuthContext";
 
 const page = ({ }) => {
   const [subject, setSubject] = useState("");
@@ -56,9 +57,7 @@ const page = ({ }) => {
                   type="text"
                   className="form-control"
                   id="username"
-                  onChange={(e) => {
-                    setName(e.target.value);
-                  }}
+                  onChange={(e) => setName(e.target.value)}
                 />
               </div>
               <div className="mb-3">
@@ -69,9 +68,7 @@ const page = ({ }) => {
                   type="email"
                   className="form-control"
                   id="email"
-                  onChange={(e) => {
-                    setEmail(e.target.value);
-                  }}
+                  onChange={(e) => setEmail(e.target.value)}
                 />
               </div>
               <div className="mb-3">
@@ -82,9 +79,7 @@ const page = ({ }) => {
                   type="text"
                   className="form-control"
                   id="subject"
-                  onChange={(e) => {
-                    setSubject(e.target.value);
-                  }}
+                  onChange={(e) => setSubject(e.target.value)}
                 />
               </div>
               <div className="mb-3">
@@ -95,9 +90,7 @@ const page = ({ }) => {
                   className="form-control"
                   id="message"
                   rows={5}
-                  onChange={(e) => {
-                    setContent(e.target.value);
-                  }}
+                  onChange={(e) => setContent(e.target.value)}
                 />
               </div>
               <button type="submit" className="btn btn-primary">
