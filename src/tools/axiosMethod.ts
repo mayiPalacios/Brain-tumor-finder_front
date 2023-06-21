@@ -5,8 +5,7 @@ import {
   IContactUsPost,
   IContactUsPostResponse,
 } from "@/interfaces/contact-us";
-// const BASE_URL = `https://btf-image-analyzer-api-production.up.railway.app`;
-const BASE_URL = `http://localhost:8000`;
+const BASE_URL = `https://btf-image-analyzer-api-production.up.railway.app`;
 
 export const postLogin = async (userData: IloginPost) => {
   try {
