@@ -11,7 +11,7 @@ import axios from 'axios';
 import { Typeahead } from 'react-bootstrap-typeahead';
 
 
-const page = ({}) => {
+const Page = ({}) => {
   const [users, setUsers] = useState([]);
   const [selected, setSelected] = useState([]);
   const [showModal, setShowModal] = useState(false);
@@ -185,4 +185,4 @@ const page = ({}) => {
   );
 };
 
-export default page;
+export default Page;
