@@ -25,13 +25,14 @@ const Page = ({}) => {
   });
 
   useEffect(() => {
-    if (selected.length > 0 && selected[0].customOption) {
+    if (selected.length > 0 && (selected[0] as any).customOption) {
+      console.log(selected)
       setShowModal(true);
       setSelected([]);
     }
   }, [selected]);
 
-  const handleSearch = (query) => {
+  const handleSearch = (query: any) => {
     if (!query) {
       return;
     }
@@ -47,7 +48,7 @@ const Page = ({}) => {
         });
   }
 
-  const handleSubmit = (event) => {
+  const handleSubmit = (event: any) => {
     event.preventDefault();
     axios.post('https://btf-image-analyzer-api-production.up.railway.app/api/v1/patients', newUser, {
       headers: {
@@ -59,7 +60,7 @@ const Page = ({}) => {
         });
   }
 
-  const handleInputChange = (event) => {
+  const handleInputChange = (event: any) => {
     setNewUser({ ...newUser, [event.target.name]: event.target.value });
   }
   return (
@@ -99,9 +100,13 @@ const Page = ({}) => {
                 <div>
                   <Typeahead
                       id="user-typeahead"
-                      labelKey={(option) => `${option.first_name} ${option.last_name}`}
+                      labelKey={(option) =>
+                          typeof option === 'string'
+                              ? option
+                              : `${option.first_name} ${option.last_name}`
+                      }
                       onInputChange={handleSearch}
-                      onChange={setSelected}
+                      onChange={() => setSelected}
                       options={users}
                       placeholder="Busca un usuario..."
                       allowNew
