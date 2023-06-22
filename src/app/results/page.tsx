@@ -4,7 +4,7 @@ import { memo } from "react";
 import Image from "next/image";
 import { AuthProvider } from "@/contexts/AuthContext";
 
-const page = ({}) => {
+const Page = ({}) => {
   return (
     <AuthProvider>
       <div>
@@ -72,4 +72,4 @@ const page = ({}) => {
   );
 };
 
-export default page;
+export default Page;

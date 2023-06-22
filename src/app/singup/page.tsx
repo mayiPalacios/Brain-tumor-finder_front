@@ -2,6 +2,7 @@
 import Navbar from "@/components/navbar";
 import { memo, useState } from "react";
 import Image from "next/image";
+import Swal from "sweetalert2";
 import { Isingup, IsingupSucces } from "@/interfaces/singup";
 import { postRegister } from "@/tools/axiosMethod";
 import { useRouter } from "next/navigation";
@@ -35,7 +36,11 @@ const Page = ({}) => {
     try {
       const response: IsingupSucces | undefined = await postRegister(user);
       if (response) {
-        return setSuccesR(true);
+        return Swal.fire(
+          "Hello!",
+          "SweetAlert is working in Next.js!",
+          "success"
+        );
       }
     } catch (error) {
       if (error instanceof Error) console.log(error);

@@ -1,8 +1,21 @@
+"use client";
 import Footer from "@/components/footer";
 import Navbar from "@/components/navbar";
 import Image from "next/image";
+import "../../i18n";
+import { useEffect } from "react";
+import { useTranslation } from "react-i18next";
 
 export default function Home() {
+  const { t, i18n } = useTranslation();
+
+  useEffect(() => {
+    const lng = navigator.language;
+    i18n.changeLanguage(lng);
+  }, []);
+
+  const lng = navigator.language;
+
   return (
     <main>
       <Navbar />
@@ -11,7 +24,7 @@ export default function Home() {
           className="title__home ml-3 d-flex align-items-center justify-content-center"
           style={{ width: "100%", marginLeft: "22px" }}
         >
-          <h1>Tu salud esta en buenas manos</h1>
+          <h1>{t("home.title")}</h1>;<span>{lng}</span>
         </div>
 
         <div className="d-flex align-items-end gap-4" style={{ width: "100%" }}>
