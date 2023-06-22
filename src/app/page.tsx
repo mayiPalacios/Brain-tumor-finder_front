@@ -10,11 +10,11 @@ export default function Home() {
   const { t, i18n } = useTranslation();
 
   useEffect(() => {
-    const lng = navigator.language;
-    i18n.changeLanguage(lng);
+    const { language } = navigator || window.navigator;
+    if (language) {
+      i18n.changeLanguage(language);
+    }
   }, []);
-
-  const lng = navigator.language;
 
   return (
     <main>
@@ -24,7 +24,7 @@ export default function Home() {
           className="title__home ml-3 d-flex align-items-center justify-content-center"
           style={{ width: "100%", marginLeft: "22px" }}
         >
-          <h1>{t("home.title")}</h1>;<span>{lng}</span>
+          <h1>{t("home.title")}</h1>
         </div>
 
         <div className="d-flex align-items-end gap-4" style={{ width: "100%" }}>
