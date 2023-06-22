@@ -129,7 +129,6 @@ const Page = ({}) => {
                           <Form.Control as="select" name="gender" onChange={handleInputChange}>
                             <option value="F">Femenino</option>
                             <option value="M">Masculino</option>
-                            //Añade aquí las opciones que necesites
                           </Form.Control>
                         </Form.Group>
 
