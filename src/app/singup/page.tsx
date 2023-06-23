@@ -84,7 +84,7 @@ const Page = ({}) => {
           {" "}
           <Navbar />
           <div className="row m-0">
-            <div className="col-md-6 p-0">
+            <div className="hideImage col-md-6 p-0">
               <div
                 className="d-flex align-items-center justify-content-center"
                 style={{ height: "100vh", width: "50vw" }}
@@ -116,7 +116,7 @@ const Page = ({}) => {
               </div>
             </div>
 
-            <div className="col-md-6 p-0">
+            <div className="respon col-md-6 p-0">
               <div className="d-flex align-items-center justify-content-center h-100">
                 <form className="form__login   gap-4">
                   <div className="w-100 d-flex align-items-center justify-content-center">

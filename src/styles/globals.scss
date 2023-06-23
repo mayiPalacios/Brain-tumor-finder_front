@@ -5,7 +5,6 @@
 @import "./components/contact";
 @import "./components/try";
 @import "./components/login";
-@import "./components/alert";
 @import "./components/card";
 @import "./components/register";
 
@@ -14,4 +13,18 @@ body {
 }
 label {
   color: #f7b114;
+}
+
+@media (max-width: 972px) {
+  .hideImage {
+    display: none;
+  }
+  .respon {
+    height: 100%;
+    width: 100%;
+    display: flex;
+    align-items: center;
+    justify-content: center;
+    margin-top: 25vh;
+  }
 }

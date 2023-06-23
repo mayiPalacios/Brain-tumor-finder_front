@@ -10,7 +10,7 @@ const page = ({}) => {
       <div className="container__register">
         <Navbar />
         <div>
-          <div className="container__tittle">
+          <div className=" container__tittle">
             <h2>Registro de uso de la IA</h2>
           </div>
 
