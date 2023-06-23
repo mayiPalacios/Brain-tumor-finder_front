@@ -1,9 +1,10 @@
+"use client";
 import Navbar from "@/components/navbar";
 import { memo } from "react";
 import Image from "next/image";
 import { AuthProvider } from "@/contexts/AuthContext";
 
-const page = ({}) => {
+const Page = () => {
   return (
     <AuthProvider>
       <div className="container__main">
@@ -60,4 +61,4 @@ const page = ({}) => {
   );
 };
 
-export default memo(page);
+export default memo(Page);
