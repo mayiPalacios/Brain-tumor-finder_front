@@ -1,10 +1,21 @@
+"use client";
 import Navbar from "@/components/navbar";
 import imgAproved from "../../IMG/aprobar.png";
-import { memo } from "react";
+import { memo, useEffect } from "react";
 import Image from "next/image";
 import { AuthProvider } from "@/contexts/AuthContext";
+import { useTranslation } from "react-i18next";
 
 const Page = ({}) => {
+  const { t, i18n } = useTranslation();
+
+  useEffect(() => {
+    const { language } = navigator || window.navigator;
+    if (language) {
+      i18n.changeLanguage(language);
+    }
+  }, []);
+
   return (
     <AuthProvider>
       <div>
@@ -27,10 +38,11 @@ const Page = ({}) => {
 
           <section className="card d-flex p-5 flex-column gap-4">
             <div className="d-flex flex-column align-items-center justify-content-center">
-              <h6>Resultados</h6>
-              <span>probabilidad positiva 75.33%</span>
-              <span>probabilidad negativa 24.67%</span>
+              <h6>{t("results.results")}</h6>
+              <span>{t("results.positiveR")} 75.33%</span>
+              <span>{t("results.negativeR")} 24.67%</span>
             </div>
+
             <div className="d-flex gap-5">
               <img
                 height={400}
@@ -38,14 +50,15 @@ const Page = ({}) => {
                 className="rounded"
                 src="https://c8.alamy.com/compes/c96175/el-cerebro-normal-irm-c96175.jpg"
               />
+
               <div className="d-flex flex-column gap-2">
-                <span>Nombre del paciente</span>
+                <span>{t("results.name")}</span>
                 <select className="form-control">
                   <option>nombre</option>
                 </select>
 
                 <div>
-                  <span>Validar Resultados</span>
+                  <span>{t("results.validate")}</span>
                   <div className="d-flex gap-2">
                     <button className="btn_approved_denied">
                       <img src="/aprobar.png" alt="" />
@@ -56,13 +69,14 @@ const Page = ({}) => {
                     </button>
                   </div>
                 </div>
-                <span>Comentario</span>
+
+                <span>{t("results.comments")}</span>
                 <textarea className="form-control" />
               </div>
             </div>
             <div className="d-flex  align-items-center justify-content-center">
               <button className="btn btn-secondary  btn__register">
-                Guardar
+                {t("results.btn")}
               </button>
             </div>
           </section>

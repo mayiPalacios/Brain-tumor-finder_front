@@ -7,10 +7,22 @@ import { IloginPost, IloginSuccess } from "@/interfaces/login";
 import { useRouter } from "next/navigation";
 import useAuth from "@/hooks/useAuth";
 
+import { useEffect } from "react";
+import { useTranslation } from "react-i18next";
+
 const Page = ({}) => {
   const [email, setEmail] = useState("");
   const [password, setPassword] = useState("");
   const isLoggedIn = useAuth();
+
+  const { t, i18n } = useTranslation();
+
+  useEffect(() => {
+    const { language } = navigator || window.navigator;
+    if (language) {
+      i18n.changeLanguage(language);
+    }
+  }, []);
 
   const router = useRouter();
 
@@ -88,10 +100,10 @@ const Page = ({}) => {
               <div className="d-flex align-items-center justify-content-center h-100">
                 <form className="form__login   gap-4">
                   <div className="w-100 d-flex align-items-center justify-content-center">
-                    <h2 className="">Login</h2>
+                    <h2 className="">{t("login.login")}</h2>
                   </div>
 
-                  <label htmlFor="">Email</label>
+                  <label htmlFor="">{t("login.email")}</label>
                   <input
                     type="email"
                     style={{ padding: "6px, 9px, 6px, 9px", width: "501px" }}
@@ -99,7 +111,7 @@ const Page = ({}) => {
                       setEmail(e.target.value);
                     }}
                   />
-                  <label htmlFor="">Password</label>
+                  <label htmlFor="">{t("login.password")}</label>
                   <input
                     type="password"
                     onChange={(e) => {
@@ -109,7 +121,7 @@ const Page = ({}) => {
                   />
                   <div className="w-100 d-flex align-items-center justify-content-center">
                     <button className="btn btn__login" onClick={handleLogin}>
-                      Login
+                      {t("login.btn")}
                     </button>
                   </div>
                 </form>

@@ -1,12 +1,14 @@
 "use client";
 import Navbar from "@/components/navbar";
-import { memo, useState } from "react";
+import { memo, useEffect, useState } from "react";
 import Image from "next/image";
 import Swal from "sweetalert2";
 import { Isingup, IsingupSucces } from "@/interfaces/singup";
 import { postRegister } from "@/tools/axiosMethod";
 import { useRouter } from "next/navigation";
 import useAuth from "@/hooks/useAuth";
+
+import { useTranslation } from "react-i18next";
 
 const Page = ({}) => {
   const [email, setEmail] = useState("");
@@ -23,6 +25,14 @@ const Page = ({}) => {
 
   const isLoggedIn = useAuth();
   const router = useRouter();
+  const { t, i18n } = useTranslation();
+
+  useEffect(() => {
+    const { language } = navigator || window.navigator;
+    if (language) {
+      i18n.changeLanguage(language);
+    }
+  }, []);
 
   if (isLoggedIn) {
     router.push("/");
@@ -110,19 +120,19 @@ const Page = ({}) => {
               <div className="d-flex align-items-center justify-content-center h-100">
                 <form className="form__login   gap-4">
                   <div className="w-100 d-flex align-items-center justify-content-center">
-                    <h2 className="">Register</h2>
+                    <h2 className="">{t("signup.register")}</h2>
                   </div>
 
                   <div className="d-flex gap-5">
                     <div className="d-flex flex-column gap-3">
-                      <label htmlFor="">firts name</label>
+                      <label htmlFor="">{t("signup.firtsN")}</label>
                       <input
                         type="text"
                         onChange={(e) => setName(e.target.value)}
                       />
                     </div>
                     <div className="d-flex flex-column gap-3">
-                      <label htmlFor="">firts lastname</label>
+                      <label htmlFor="">{t("signup.lastN")}</label>
                       <input
                         type="text"
                         onChange={(e) => setLname(e.target.value)}
@@ -130,7 +140,7 @@ const Page = ({}) => {
                     </div>
                   </div>
 
-                  <label htmlFor="">Email</label>
+                  <label htmlFor="">{t("login.email")}</label>
                   <input
                     type="email"
                     onChange={(e) => setEmail(e.target.value)}
@@ -150,7 +160,7 @@ const Page = ({}) => {
                     <label>M</label>
                   </div>
 
-                  <label htmlFor="">Doctors cards</label>
+                  <label htmlFor="">{t("signup.cards")}</label>
                   <input
                     type="text"
                     style={{ padding: "6px, 9px, 6px, 9px", width: "501px" }}
@@ -158,7 +168,7 @@ const Page = ({}) => {
                   />
 
                   <div className="d-flex flex-column gap-3">
-                    <label htmlFor="">Country</label>
+                    <label htmlFor="">{t("signup.Country")}</label>
                     <input
                       type="text"
                       style={{ padding: "6px, 9px, 6px, 9px", width: "501px" }}
@@ -170,14 +180,14 @@ const Page = ({}) => {
 
                   <div className="d-flex gap-5">
                     <div className="d-flex flex-column gap-3">
-                      <label htmlFor="">Password</label>
+                      <label htmlFor="">{t("login.password")}</label>
                       <input
                         type="password"
                         onChange={(e) => setPassword(e.target.value)}
                       />
                     </div>
                     <div className="d-flex flex-column gap-3">
-                      <label htmlFor="">password confirmation</label>
+                      <label htmlFor="">{t("signup.passConfirm")}</label>
                       <input
                         type="password"
                         onChange={(e) => setConfirmP(e.target.value)}
@@ -197,7 +207,7 @@ const Page = ({}) => {
                       type="submit"
                       onClick={(e) => handleClickRegister(e)}
                     >
-                      Register
+                      {t("header.signUp")}
                     </button>
                   </div>
                 </form>

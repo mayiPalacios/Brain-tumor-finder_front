@@ -4,11 +4,21 @@ import $ from "jquery";
 import Image from "next/image";
 import { useRouter } from "next/navigation";
 import useAuth from "@/hooks/useAuth";
+import "../../i18n";
+import { useTranslation } from "react-i18next";
 
 const Navbar = () => {
   const [showNav, setShowNav] = useState(false);
   const isLoggedIn = useAuth();
-  const router = useRouter();
+  const { t, i18n } = useTranslation();
+
+  useEffect(() => {
+    const { language } = navigator || window.navigator;
+    if (language) {
+      i18n.changeLanguage(language);
+    }
+  }, []);
+
   useEffect(() => {
     $(".navbar-toggler").click(function () {
       setShowNav(!showNav);
@@ -50,13 +60,13 @@ const Navbar = () => {
           <ul className="navbar-nav mx-auto ">
             <li className=" d-flex nav-item active">
               <a className="nav-link" href="/">
-                Home
+                {t("header.home")}
               </a>
             </li>
             {isLoggedIn ? (
               <li className="nav-item active">
                 <a className="nav-link" href="/try">
-                  Try
+                  {t("header.try")}
                 </a>
               </li>
             ) : (
@@ -65,7 +75,7 @@ const Navbar = () => {
 
             <li className="nav-item">
               <a className="nav-link" href="/contact">
-                Contact us
+                {t("header.contact")}
               </a>
             </li>
           </ul>
@@ -73,19 +83,19 @@ const Navbar = () => {
           {isLoggedIn ? (
             <div className="navbar-nav">
               <a className="nav-link" href="/login" onClick={handleLogout}>
-                Logout
+                {t("header.logout")}
               </a>
               <a className="nav-link" href="/register">
-                Register
+                {t("header.register")}
               </a>
             </div>
           ) : (
             <div className="navbar-nav">
               <a className="nav-link" href="/singup">
-                Sign up
+                {t("header.signUp")}
               </a>
               <a className="nav-link" href="/login">
-                Login
+                {t("header.login")}
               </a>
             </div>
           )}
