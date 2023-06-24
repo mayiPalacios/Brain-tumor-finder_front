@@ -29,16 +29,12 @@ export const postLogin = async (userData: FormData) => {
 export const postContactUs = async (
   contactUsDto: IContactUsPost
 ): Promise<IContactUsPostResponse> => {
-  try {
-    const response = await axios.post<
-      IContactUsPostResponse,
-      AxiosResponse<IContactUsPostResponse>
-    >(`${BASE_URL}/api/v1/contact`, contactUsDto);
-    return response.data;
-  } catch (error) {
-    console.error(error);
-    return { success: false };
-  }
+  const response = await axios.post<
+    IContactUsPostResponse,
+    AxiosResponse<IContactUsPostResponse>
+  >(`${BASE_URL}/api/v1/contact`, contactUsDto);
+
+  return response.data;
 };
 
 export const postRegister = async (userD: Isingup) => {

@@ -10,7 +10,7 @@ import axios from "axios";
 import { Typeahead } from "react-bootstrap-typeahead";
 import { useTranslation } from "react-i18next";
 
-const Page = ({}) => {
+const Page = ({ }) => {
   const [users, setUsers] = useState([]);
   const [selected, setSelected] = useState([]);
   const [showModal, setShowModal] = useState(false);
@@ -46,7 +46,7 @@ const Page = ({}) => {
     axios
       .get(
         "https://btf-image-analyzer-api-production.up.railway.app/api/v1/patients/search?q=" +
-          query,
+        query,
         {
           headers: {
             Authorization: "Bearer " + localStorage.getItem("loginToken"),

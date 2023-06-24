@@ -6,6 +6,9 @@ import { AuthProvider } from "@/contexts/AuthContext";
 import { useTranslation } from "react-i18next";
 import { IContactUsPost } from "@/interfaces/contact-us";
 import { postContactUs } from "@/tools/axiosMethod";
+import { LoadingScreen } from "@/components/loading";
+import { useLoading } from "@rest-hooks/hooks";
+import Swal from "sweetalert2";
 
 const Page = () => {
   const { t, i18n } = useTranslation();
@@ -13,30 +16,52 @@ const Page = () => {
   const [content, setContent] = useState("");
   const [name, setName] = useState("");
   const [email, setEmail] = useState("");
+  const [isSuccess, setIsSuccess] = useState(true);
 
-  const sendToSupportMessag = async () => {
-    const emailToSent: IContactUsPost = { content, subject, email, name };
-    try {
-      const { success } = await postContactUs(emailToSent);
-      if (!success) {
-        return;
+  const [toggleHandler, loading] = useLoading(
+    async (event: React.FormEvent<HTMLFormElement>) => {
+      try {
+        event.preventDefault();
+        const emailToSent: IContactUsPost = { content, subject, email, name };
+        const { success } = await postContactUs(emailToSent);
+
+        setIsSuccess(success);
+        handleOnSuccess("Success message sent");
+        return success;
+      } catch (error) {
+        setIsSuccess(false);
       }
-    } catch (error) {
-      console.error(error);
     }
-  };
-
-  const handleContactUs = (event: React.FormEvent<HTMLFormElement>) => {
-    event.preventDefault();
-    sendToSupportMessag();
-  };
+  );
 
   useEffect(() => {
     const { language } = navigator || window.navigator;
     if (language) {
       i18n.changeLanguage(language);
     }
-  }, []);
+  }, [i18n]);
+
+  const handleOnFail = (message: string) => {
+    Swal.fire({
+      title: message,
+      icon: "error",
+      confirmButtonText: "Accept",
+    });
+    setIsSuccess(true);
+  };
+
+  const handleOnSuccess = (message: string) => {
+    Swal.fire({
+      title: message,
+      icon: "success",
+      confirmButtonText: "Accept",
+    });
+    setIsSuccess(true);
+  };
+
+  if (!isSuccess) {
+    return handleOnFail("Request failed");
+  }
 
   return (
     <AuthProvider>
@@ -57,7 +82,7 @@ const Page = () => {
               />
             </div>
             <div className="col-md-5">
-              <form onSubmit={handleContactUs}>
+              <form onSubmit={toggleHandler}>
                 <div className="mb-3">
                   <label htmlFor="username" className="form-label">
                     {t("contact.name")}
@@ -103,7 +128,7 @@ const Page = () => {
                   />
                 </div>
                 <button type="submit" className="btn btn-primary">
-                  {t("contact.btn")}
+                  {!loading ? t("contact.btn") : <LoadingScreen />}
                 </button>
               </form>
             </div>
