@@ -1,12 +1,35 @@
 "use client";
 import Navbar from "@/components/navbar";
-import { memo, useEffect } from "react";
+import { memo, useEffect, useState } from "react";
 import Image from "next/image";
 import { AuthProvider } from "@/contexts/AuthContext";
 import { useTranslation } from "react-i18next";
+import { IContactUsPost } from "@/interfaces/contact-us";
+import { postContactUs } from "@/tools/axiosMethod";
 
 const Page = () => {
   const { t, i18n } = useTranslation();
+  const [subject, setSubject] = useState("");
+  const [content, setContent] = useState("");
+  const [name, setName] = useState("");
+  const [email, setEmail] = useState("");
+
+  const sendToSupportMessag = async () => {
+    const emailToSent: IContactUsPost = { content, subject, email, name };
+    try {
+      const { success } = await postContactUs(emailToSent);
+      if (!success) {
+        return;
+      }
+    } catch (error) {
+      console.error(error);
+    }
+  };
+
+  const handleContactUs = (event: React.FormEvent<HTMLFormElement>) => {
+    event.preventDefault();
+    sendToSupportMessag();
+  };
 
   useEffect(() => {
     const { language } = navigator || window.navigator;
@@ -34,30 +57,50 @@ const Page = () => {
               />
             </div>
             <div className="col-md-5">
-              <form>
+              <form onSubmit={handleContactUs}>
                 <div className="mb-3">
                   <label htmlFor="username" className="form-label">
                     {t("contact.name")}
                   </label>
-                  <input type="text" className="form-control" id="username" />
+                  <input
+                    type="text"
+                    className="form-control"
+                    id="username"
+                    onChange={(e) => setName(e.target.value)}
+                  />
                 </div>
                 <div className="mb-3">
                   <label htmlFor="email" className="form-label">
                     {t("login.email")}
                   </label>
-                  <input type="email" className="form-control" id="email" />
+                  <input
+                    type="email"
+                    className="form-control"
+                    id="email"
+                    onChange={(e) => setEmail(e.target.value)}
+                  />
                 </div>
                 <div className="mb-3">
                   <label htmlFor="subject" className="form-label">
                     {t("contact.subject")}
                   </label>
-                  <input type="text" className="form-control" id="subject" />
+                  <input
+                    type="text"
+                    className="form-control"
+                    id="subject"
+                    onChange={(e) => setSubject(e.target.value)}
+                  />
                 </div>
                 <div className="mb-3">
                   <label htmlFor="message" className="form-label">
                     {t("contact.message")}
                   </label>
-                  <textarea className="form-control" id="message" rows={5} />
+                  <textarea
+                    className="form-control"
+                    id="message"
+                    rows={5}
+                    onChange={(e) => setContent(e.target.value)}
+                  />
                 </div>
                 <button type="submit" className="btn btn-primary">
                   {t("contact.btn")}
