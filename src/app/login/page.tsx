@@ -10,7 +10,7 @@ import useAuth from "@/hooks/useAuth";
 import { useEffect } from "react";
 import { useTranslation } from "react-i18next";
 
-const Page = ({}) => {
+const Page = ({ }) => {
   const [email, setEmail] = useState("");
   const [password, setPassword] = useState("");
   const isLoggedIn = useAuth();

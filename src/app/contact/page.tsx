@@ -10,7 +10,7 @@ import { LoadingScreen } from "@/components/loading";
 import { useLoading } from "@rest-hooks/hooks";
 import Swal from "sweetalert2";
 
-const Page = () => {
+const Page = ({ }) => {
   const { t, i18n } = useTranslation();
   const [subject, setSubject] = useState("");
   const [content, setContent] = useState("");
@@ -60,7 +60,8 @@ const Page = () => {
   };
 
   if (!isSuccess) {
-    return handleOnFail("Request failed");
+    handleOnFail("Request failed");
+    return <></>;
   }
 
   return (
