@@ -1,6 +1,8 @@
 import { Inter } from "next/font/google";
 import { AuthProvider } from "@/contexts/AuthContext";
 import "../styles/globals.scss";
+import "sweetalert2/dist/sweetalert2.css";
+
 const inter = Inter({ subsets: ["latin"] });
 
 export const metadata = {

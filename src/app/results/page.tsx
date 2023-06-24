@@ -2,31 +2,37 @@
 import Navbar from "@/components/navbar";
 
 import imgAproved from "../../IMG/aprobar.png";
-import { memo } from "react";
 import Image from "next/image";
 import { AuthProvider } from "@/contexts/AuthContext";
-import { useState, useEffect, useRef  } from 'react';
-import { Modal, Button, Form, FormControl } from 'react-bootstrap';
-import axios from 'axios';
-import { Typeahead } from 'react-bootstrap-typeahead';
-
+import { useState, useEffect, useRef } from "react";
+import { Modal, Button, Form, FormControl } from "react-bootstrap";
+import axios from "axios";
+import { Typeahead } from "react-bootstrap-typeahead";
+import { useTranslation } from "react-i18next";
 
 const Page = ({}) => {
   const [users, setUsers] = useState([]);
   const [selected, setSelected] = useState([]);
   const [showModal, setShowModal] = useState(false);
   const [newUser, setNewUser] = useState({
-    first_name: '',
-    last_name: '',
-    gender: 'F',
-    country: '',
-    email: '',
-    birthday: ''
+    first_name: "",
+    last_name: "",
+    gender: "F",
+    country: "",
+    email: "",
+    birthday: "",
   });
 
+  const { t, i18n } = useTranslation();
+
   useEffect(() => {
+    const { language } = navigator || window.navigator;
+    if (language) {
+      i18n.changeLanguage(language);
+    }
+
     if (selected.length > 0 && (selected[0] as any).customOption) {
-      console.log(selected)
+      console.log(selected);
       setShowModal(true);
       setSelected([]);
     }
@@ -37,32 +43,42 @@ const Page = ({}) => {
       return;
     }
 
-    axios.get('https://btf-image-analyzer-api-production.up.railway.app/api/v1/patients/search?q=' + query, {
-      headers: {
-        'Authorization': 'Bearer '+ localStorage.getItem("loginToken")
-      }
-    })
-        .then(response => {
-          console.log(response)
-          setUsers(response.data);
-        });
-  }
+    axios
+      .get(
+        "https://btf-image-analyzer-api-production.up.railway.app/api/v1/patients/search?q=" +
+          query,
+        {
+          headers: {
+            Authorization: "Bearer " + localStorage.getItem("loginToken"),
+          },
+        }
+      )
+      .then((response) => {
+        console.log(response);
+        setUsers(response.data);
+      });
+  };
 
   const handleSubmit = (event: any) => {
     event.preventDefault();
-    axios.post('https://btf-image-analyzer-api-production.up.railway.app/api/v1/patients', newUser, {
-      headers: {
-        'Authorization': 'Bearer '+ localStorage.getItem("loginToken")
-      }
-    })
-        .then(response => {
-          setShowModal(false);
-        });
-  }
+    axios
+      .post(
+        "https://btf-image-analyzer-api-production.up.railway.app/api/v1/patients",
+        newUser,
+        {
+          headers: {
+            Authorization: "Bearer " + localStorage.getItem("loginToken"),
+          },
+        }
+      )
+      .then((response) => {
+        setShowModal(false);
+      });
+  };
 
   const handleInputChange = (event: any) => {
     setNewUser({ ...newUser, [event.target.name]: event.target.value });
-  }
+  };
   return (
     <AuthProvider>
       <div>
@@ -85,10 +101,11 @@ const Page = ({}) => {
 
           <section className="card d-flex p-5 flex-column gap-4">
             <div className="d-flex flex-column align-items-center justify-content-center">
-              <h6>Resultados</h6>
-              <span>probabilidad positiva 75.33%</span>
-              <span>probabilidad negativa 24.67%</span>
+              <h6>{t("results.results")}</h6>
+              <span>{t("results.positiveR")} 75.33%</span>
+              <span>{t("results.negativeR")} 24.67%</span>
             </div>
+
             <div className="d-flex gap-5">
               <img
                 height={400}
@@ -96,21 +113,22 @@ const Page = ({}) => {
                 className="rounded"
                 src="https://c8.alamy.com/compes/c96175/el-cerebro-normal-irm-c96175.jpg"
               />
+
               <div className="d-flex flex-column gap-2">
                 <div>
                   <Typeahead
-                      id="user-typeahead"
-                      labelKey={(option) =>
-                          typeof option === 'string'
-                              ? option
-                              : `${option.first_name} ${option.last_name}`
-                      }
-                      onInputChange={handleSearch}
-                      onChange={() => setSelected}
-                      options={users}
-                      placeholder="Busca un usuario..."
-                      allowNew
-                      newSelectionPrefix="Crear paciente: "
+                    id="user-typeahead"
+                    labelKey={(option) =>
+                      typeof option === "string"
+                        ? option
+                        : `${option.first_name} ${option.last_name}`
+                    }
+                    onInputChange={handleSearch}
+                    onChange={() => setSelected}
+                    options={users}
+                    placeholder="Busca un usuario..."
+                    allowNew
+                    newSelectionPrefix="Crear paciente: "
                   />
 
                   <Modal show={showModal} onHide={() => setShowModal(false)}>
@@ -121,17 +139,29 @@ const Page = ({}) => {
                       <Form onSubmit={handleSubmit}>
                         <Form.Group controlId="formBasicFirstName">
                           <Form.Label>Nombre</Form.Label>
-                          <Form.Control type="text" name="first_name" onChange={handleInputChange} />
+                          <Form.Control
+                            type="text"
+                            name="first_name"
+                            onChange={handleInputChange}
+                          />
                         </Form.Group>
 
                         <Form.Group controlId="formBasicLastName">
                           <Form.Label>Apellido</Form.Label>
-                          <Form.Control type="text" name="last_name" onChange={handleInputChange} />
+                          <Form.Control
+                            type="text"
+                            name="last_name"
+                            onChange={handleInputChange}
+                          />
                         </Form.Group>
 
                         <Form.Group controlId="formBasicGender">
                           <Form.Label>Género</Form.Label>
-                          <Form.Control as="select" name="gender" onChange={handleInputChange}>
+                          <Form.Control
+                            as="select"
+                            name="gender"
+                            onChange={handleInputChange}
+                          >
                             <option value="F">Femenino</option>
                             <option value="M">Masculino</option>
                           </Form.Control>
@@ -139,30 +169,45 @@ const Page = ({}) => {
 
                         <Form.Group controlId="formBasicCountry">
                           <Form.Label>País</Form.Label>
-                          <Form.Control type="text" name="country" onChange={handleInputChange} />
+                          <Form.Control
+                            type="text"
+                            name="country"
+                            onChange={handleInputChange}
+                          />
                         </Form.Group>
 
                         <Form.Group controlId="formBasicEmail">
                           <Form.Label>Email</Form.Label>
-                          <Form.Control type="email" name="email" onChange={handleInputChange} />
+                          <Form.Control
+                            type="email"
+                            name="email"
+                            onChange={handleInputChange}
+                          />
                         </Form.Group>
 
                         <Form.Group controlId="formBasicBirthday">
                           <Form.Label>Fecha de Nacimiento</Form.Label>
-                          <Form.Control type="date" name="birthday" onChange={handleInputChange} />
+                          <Form.Control
+                            type="date"
+                            name="birthday"
+                            onChange={handleInputChange}
+                          />
                         </Form.Group>
 
-                        <Button variant="primary" type="submit" className="mt-3">
+                        <Button
+                          variant="primary"
+                          type="submit"
+                          className="mt-3"
+                        >
                           Crear
                         </Button>
                       </Form>
-
                     </Modal.Body>
                   </Modal>
                 </div>
 
                 <div>
-                  <span>Validar Resultados</span>
+                  <span>{t("results.validate")}</span>
                   <div className="d-flex gap-2">
                     <button className="btn_approved_denied">
                       <img src="/aprobar.png" alt="" />
@@ -173,13 +218,14 @@ const Page = ({}) => {
                     </button>
                   </div>
                 </div>
-                <span>Comentario</span>
+
+                <span>{t("results.comments")}</span>
                 <textarea className="form-control" />
               </div>
             </div>
             <div className="d-flex  align-items-center justify-content-center">
               <button className="btn btn-secondary  btn__register">
-                Guardar
+                {t("results.btn")}
               </button>
             </div>
           </section>
