@@ -11,8 +11,17 @@ import { Typeahead } from "react-bootstrap-typeahead";
 import { useTranslation } from "react-i18next";
 
 const Page = ({}) => {
+  type User = {
+    first_name: string,
+    last_name: string,
+    gender: string,
+    country: string,
+    email: string,
+    birthday: string,
+  }
+  type UserOption = string | User;
   const [users, setUsers] = useState([]);
-  const [selected, setSelected] = useState([]);
+  const [selected, setSelected] = useState<UserOption[]>([]);
   const [showModal, setShowModal] = useState(false);
   const [newUser, setNewUser] = useState({
     first_name: "",
@@ -30,9 +39,7 @@ const Page = ({}) => {
     if (language) {
       i18n.changeLanguage(language);
     }
-
     if (selected.length > 0 && (selected[0] as any).customOption) {
-      console.log(selected);
       setShowModal(true);
       setSelected([]);
     }
@@ -124,10 +131,10 @@ const Page = ({}) => {
                         : `${option.first_name} ${option.last_name}`
                     }
                     onInputChange={handleSearch}
-                    onChange={() => setSelected}
+                    onChange={(selected:any[])=> setSelected(selected)}
                     options={users}
                     placeholder="Busca un usuario..."
-                    allowNew
+                    allowNew={true}
                     newSelectionPrefix="Crear paciente: "
                   />
 
