@@ -19,9 +19,9 @@ const Page = ({}) => {
     email: string,
     birthday: string,
   }
-  type Option = string | User;
+  type UserOption = string | User;
   const [users, setUsers] = useState([]);
-  const [selected, setSelected] = useState<Option[]>([]);
+  const [selected, setSelected] = useState<UserOption[]>([]);
   const [showModal, setShowModal] = useState(false);
   const [newUser, setNewUser] = useState({
     first_name: "",
@@ -131,7 +131,7 @@ const Page = ({}) => {
                         : `${option.first_name} ${option.last_name}`
                     }
                     onInputChange={handleSearch}
-                    onChange={(selected: Option[])=> setSelected(selected)}
+                    onChange={(selected: UserOption[])=> setSelected(selected)}
                     options={users}
                     placeholder="Busca un usuario..."
                     allowNew={true}
