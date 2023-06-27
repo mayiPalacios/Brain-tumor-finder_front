@@ -11,8 +11,16 @@ import { Typeahead } from "react-bootstrap-typeahead";
 import { useTranslation } from "react-i18next";
 
 const Page = ({}) => {
+  type User = {
+    first_name: string,
+    last_name: string,
+    gender: string,
+    country: string,
+    email: string,
+    birthday: string,
+  }
   const [users, setUsers] = useState([]);
-  const [selected, setSelected] = useState([]);
+  const [selected, setSelected] = useState<User[]>([]);
   const [showModal, setShowModal] = useState(false);
   const [newUser, setNewUser] = useState({
     first_name: "",
@@ -114,7 +122,7 @@ const Page = ({}) => {
 
               <div className="d-flex flex-column gap-2">
                 <div>
-                  <Typeahead
+                  <Typeahead<User>
                     id="user-typeahead"
                     labelKey={(option) =>
                       typeof option === "string"
@@ -122,7 +130,7 @@ const Page = ({}) => {
                         : `${option.first_name} ${option.last_name}`
                     }
                     onInputChange={handleSearch}
-                    onChange={(selected)=> setSelected(selected)}
+                    onChange={(selected: User[])=> setSelected(selected)}
                     options={users}
                     placeholder="Busca un usuario..."
                     allowNew={true}
