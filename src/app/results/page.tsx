@@ -30,9 +30,7 @@ const Page = ({}) => {
     if (language) {
       i18n.changeLanguage(language);
     }
-
     if (selected.length > 0 && (selected[0] as any).customOption) {
-      console.log(selected);
       setShowModal(true);
       setSelected([]);
     }
@@ -124,10 +122,10 @@ const Page = ({}) => {
                         : `${option.first_name} ${option.last_name}`
                     }
                     onInputChange={handleSearch}
-                    onChange={() => setSelected}
+                    onChange={setSelected}
                     options={users}
                     placeholder="Busca un usuario..."
-                    allowNew
+                    allowNew={true}
                     newSelectionPrefix="Crear paciente: "
                   />
 
