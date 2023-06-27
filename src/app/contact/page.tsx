@@ -7,8 +7,8 @@ import { useTranslation } from "react-i18next";
 import { IContactUsPost } from "@/interfaces/contact-us";
 import { postContactUs } from "@/tools/axiosMethod";
 import { LoadingScreen } from "@/components/loading";
-import { useLoading } from "@rest-hooks/hooks";
 import Swal from "sweetalert2";
+import useLoading from "@/hooks/useLoader";
 
 const Page = ({ }) => {
   const { t, i18n } = useTranslation();
