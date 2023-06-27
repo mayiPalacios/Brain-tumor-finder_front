@@ -16,21 +16,12 @@ const Page = ({ }) => {
   const [content, setContent] = useState("");
   const [name, setName] = useState("");
   const [email, setEmail] = useState("");
-  const [isSuccess, setIsSuccess] = useState(true);
-
-  const [toggleHandler, loading] = useLoading(
+  const [toggleHandler, loading, error, resetError] = useLoading(
     async (event: React.FormEvent<HTMLFormElement>) => {
-      try {
-        event.preventDefault();
-        const emailToSent: IContactUsPost = { content, subject, email, name };
-        const { success } = await postContactUs(emailToSent);
-
-        setIsSuccess(success);
-        handleOnSuccess("Success message sent");
-        return success;
-      } catch (error) {
-        setIsSuccess(false);
-      }
+      event.preventDefault();
+      const emailToSent: IContactUsPost = { content, subject, email, name };
+      await postContactUs(emailToSent);
+      handleOnSuccess("Success message sent");
     }
   );
 
@@ -47,7 +38,7 @@ const Page = ({ }) => {
       icon: "error",
       confirmButtonText: "Accept",
     });
-    setIsSuccess(true);
+    resetError()
   };
 
   const handleOnSuccess = (message: string) => {
@@ -56,11 +47,15 @@ const Page = ({ }) => {
       icon: "success",
       confirmButtonText: "Accept",
     });
-    setIsSuccess(true);
+    resetError()
+    setName("")
+    setEmail("")
+    setSubject("")
+    setContent("")
   };
 
-  if (!isSuccess) {
-    handleOnFail("Request failed");
+  if (error) {
+    handleOnFail(error.message);
     return <></>;
   }
 

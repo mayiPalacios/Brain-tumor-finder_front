@@ -3,7 +3,7 @@ import { useRef, useState, useCallback, useEffect } from "react";
 export default function useLoading<F extends (...args: any) => Promise<any>>(
   func: F,
   deps?: readonly any[],
-): [F, boolean, Error | undefined] {
+): [F, boolean, Error | undefined, () => void] {
   const [loading, setLoading] = useState(false);
   const [error, setError] = useState<undefined | Error>(undefined);
   const isMountedRef = useRef(true);
@@ -29,5 +29,7 @@ export default function useLoading<F extends (...args: any) => Promise<any>>(
     return ret;
     // eslint-disable-next-line react-hooks/exhaustive-deps
   }, depsList);
-  return [wrappedFunc as any, loading, error];
+
+  const resetError = () => { setError(undefined) }
+  return [wrappedFunc as any, loading, error, resetError];
 }

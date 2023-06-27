@@ -1,19 +1,39 @@
 "use client";
 import Navbar from "@/components/navbar";
-import { memo, useState } from "react";
+import { useState } from "react";
 import Image from "next/image";
 import { postLogin } from "@/tools/axiosMethod";
-import { IloginPost, IloginSuccess } from "@/interfaces/login";
+import { IloginSuccess } from "@/interfaces/login";
 import { useRouter } from "next/navigation";
 import useAuth from "@/hooks/useAuth";
 
 import { useEffect } from "react";
 import { useTranslation } from "react-i18next";
+import useLoading from "@/hooks/useLoader";
+import { LoadingScreen } from "@/components/loading";
+import Swal from "sweetalert2";
 
 const Page = ({ }) => {
   const [email, setEmail] = useState("");
   const [password, setPassword] = useState("");
   const isLoggedIn = useAuth();
+  const [handleLogin, loading, error, resetError] = useLoading(
+    async (event: React.FormEvent<HTMLFormElement>) => {
+      event.preventDefault();
+      if (loading) {
+        return
+      }
+
+      const formData = new FormData();
+      formData.append("username", email);
+      formData.append("password", password);
+      const response: IloginSuccess | undefined = await postLogin(formData);
+      if (response) {
+        localStorage.setItem("loginToken", response.access_token);
+        router.push("/try");
+      }
+    }
+  );
 
   const { t, i18n } = useTranslation();
 
@@ -22,7 +42,7 @@ const Page = ({ }) => {
     if (language) {
       i18n.changeLanguage(language);
     }
-  }, []);
+  }, [i18n]);
 
   const router = useRouter();
 
@@ -31,30 +51,19 @@ const Page = ({ }) => {
     router.push("/");
   }
 
-  const handleGetToken = async () => {
-    try {
-      const formData = new FormData();
-      formData.append("username", email);
-      formData.append("password", password);
-      const response: IloginSuccess | undefined = await postLogin(formData);
-      if (response) {
-        localStorage.setItem("loginToken", response.access_token);
-
-        setTimeout(() => {
-          router.push("/try");
-        }, 3000);
-      }
-    } catch (error) {
-      throw error;
-    }
+  const handleOnFail = (message: string) => {
+    Swal.fire({
+      title: message,
+      icon: "error",
+      confirmButtonText: "Accept",
+    });
+    resetError()
   };
 
-  const handleLogin = (
-    event: React.MouseEvent<HTMLButtonElement, MouseEvent>
-  ) => {
-    event.preventDefault();
-    handleGetToken();
-  };
+  if (error) {
+    handleOnFail(error.message);
+    return <></>;
+  }
 
   return (
     <div className="container-fluid p-0">
@@ -98,7 +107,7 @@ const Page = ({ }) => {
             </div>
             <div className="respon col-md-6 p-0">
               <div className="d-flex align-items-center justify-content-center h-100">
-                <form className="form__login   gap-4">
+                <form className="form__login   gap-4" onSubmit={handleLogin}>
                   <div className="w-100 d-flex align-items-center justify-content-center">
                     <h2 className="">{t("login.login")}</h2>
                   </div>
@@ -120,8 +129,8 @@ const Page = ({ }) => {
                     style={{ padding: "6px, 9px, 6px, 9px", width: "501px" }}
                   />
                   <div className="w-100 d-flex align-items-center justify-content-center">
-                    <button className="btn btn__login" onClick={handleLogin}>
-                      {t("login.btn")}
+                    <button className="btn btn__login">
+                      {!loading ? t("login.btn") : <LoadingScreen />}
                     </button>
                   </div>
                 </form>

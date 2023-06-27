@@ -10,7 +10,6 @@ import { Isingup, IsingupSucces } from "@/interfaces/singup";
 const BASE_URL = `https://btf-image-analyzer-api-production.up.railway.app`;
 
 export const postLogin = async (userData: FormData) => {
-  try {
     const req = await axios.post(
       `https://btf-image-analyzer-api-production.up.railway.app/api/v1/auth/login`,
       userData,
@@ -21,9 +20,6 @@ export const postLogin = async (userData: FormData) => {
       }
     );
     return req.data;
-  } catch (error) {
-    console.log(error);
-  }
 };
 
 export const postContactUs = async (
