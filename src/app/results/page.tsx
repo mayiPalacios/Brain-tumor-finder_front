@@ -122,7 +122,7 @@ const Page = ({}) => {
                         : `${option.first_name} ${option.last_name}`
                     }
                     onInputChange={handleSearch}
-                    onChange={setSelected}
+                    onChange={(selected)=> setSelected(selected)}
                     options={users}
                     placeholder="Busca un usuario..."
                     allowNew={true}
