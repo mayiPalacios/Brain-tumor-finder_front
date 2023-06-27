@@ -9,6 +9,7 @@ const nextConfig = {
       "encrypted-tbn2.gstatic.com",
       "as.com",
       "media-manager.noticiasaominuto.com",
+      "res.cloudinary.com",
     ],
   },
   i18n: {

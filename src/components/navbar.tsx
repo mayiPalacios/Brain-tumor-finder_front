@@ -65,8 +65,8 @@ const Navbar = () => {
             </li>
             {isLoggedIn ? (
               <li className="nav-item active">
-                <a className="nav-link" href="/try">
-                  {t("header.try")}
+                <a className="nav-link" href="/results">
+                  {t("header.diagnostic")}
                 </a>
               </li>
             ) : (

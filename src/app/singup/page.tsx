@@ -146,19 +146,6 @@ const Page = ({}) => {
                     onChange={(e) => setEmail(e.target.value)}
                     style={{ padding: "6px, 9px, 6px, 9px", width: "501px" }}
                   />
-                  <div className="d-flex gap-3">
-                    <br />
-                    <input name="intereses" type="radio" value="rbipeliculas" />
-                    <label>F</label>
-                    <br />
-                    <input
-                      name="intereses"
-                      style={{ color: "#F7B114" }}
-                      type="radio"
-                      value="rbilibros"
-                    />
-                    <label>M</label>
-                  </div>
 
                   <label htmlFor="">{t("signup.cards")}</label>
                   <input
