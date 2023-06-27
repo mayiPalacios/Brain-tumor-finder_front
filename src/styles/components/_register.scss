@@ -47,3 +47,19 @@
   width: 8vw;
   background-color: #25324d;
 }
+
+.container__viewMore {
+  background-position: center;
+  background-repeat: no-repeat;
+  width: 100%;
+
+  .container__select--file {
+    background-color: #fff;
+    border-radius: 32px;
+    height: 29vh;
+    width: 28vw;
+  }
+  .btn__file {
+    width: 8vw;
+  }
+}

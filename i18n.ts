@@ -38,7 +38,7 @@ i18n
             login: "login",
             logout: "Logout",
             register: "Register",
-            try: "try",
+            diagnostic: "Diagnostic",
           },
           login: {
             email: "Email",
@@ -93,7 +93,7 @@ i18n
             login: "iniciar sesion",
             logout: "Cerrar sesión",
             register: "Registros",
-            try: "intentar",
+            diagnostic: "Diagnostico",
           },
           login: {
             email: "Correo",
