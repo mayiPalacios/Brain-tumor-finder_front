@@ -131,7 +131,7 @@ const Page = ({}) => {
                         : `${option.first_name} ${option.last_name}`
                     }
                     onInputChange={handleSearch}
-                    onChange={(selected: UserOption[])=> setSelected(selected)}
+                    onChange={(selected:any[])=> setSelected(selected)}
                     options={users}
                     placeholder="Busca un usuario..."
                     allowNew={true}
