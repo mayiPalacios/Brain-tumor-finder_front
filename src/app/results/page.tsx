@@ -19,8 +19,9 @@ const Page = ({}) => {
     email: string,
     birthday: string,
   }
+  type Option = string | User;
   const [users, setUsers] = useState([]);
-  const [selected, setSelected] = useState<User[]>([]);
+  const [selected, setSelected] = useState<Option[]>([]);
   const [showModal, setShowModal] = useState(false);
   const [newUser, setNewUser] = useState({
     first_name: "",
@@ -122,7 +123,7 @@ const Page = ({}) => {
 
               <div className="d-flex flex-column gap-2">
                 <div>
-                  <Typeahead<User>
+                  <Typeahead
                     id="user-typeahead"
                     labelKey={(option) =>
                       typeof option === "string"
@@ -130,7 +131,7 @@ const Page = ({}) => {
                         : `${option.first_name} ${option.last_name}`
                     }
                     onInputChange={handleSearch}
-                    onChange={(selected: User[])=> setSelected(selected)}
+                    onChange={(selected: Option[])=> setSelected(selected)}
                     options={users}
                     placeholder="Busca un usuario..."
                     allowNew={true}
