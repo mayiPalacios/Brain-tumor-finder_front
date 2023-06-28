@@ -1,4 +1,5 @@
 "use client";
+
 import { createContext, useState, useEffect, ReactNode } from "react";
 
 interface AuthContextData {
@@ -33,7 +34,12 @@ export function AuthProvider({ children }: AuthProviderProps) {
 
   return (
     <AuthContext.Provider
-      value={{ isLoggedIn, setLoggedIn, isnotLog, setIsnotLog(isLoggedIn) {} }}
+      value={{
+        isLoggedIn,
+        setLoggedIn,
+        isnotLog,
+        setIsnotLog,
+      }}
     >
       {children}
     </AuthContext.Provider>

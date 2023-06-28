@@ -13,7 +13,6 @@ const page = ({}) => {
           <div className=" container__tittle">
             <h2>Registro de uso de la IA</h2>
           </div>
-
           <Card />
         </div>
       </div>
