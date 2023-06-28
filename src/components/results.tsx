@@ -233,7 +233,7 @@ const Results = () => {
       {isLoggedIn ? (
         <div className="container__try container__results d-flex justify-content-center align-items-center">
           <Image
-            alt=""
+            alt="Results"
             src="https://as.com/diarioas/imagenes/2020/07/30/actualidad/1596099304_781508_1596099506_noticia_normal.jpg"
             width="500"
             height="300"
@@ -289,6 +289,7 @@ const Results = () => {
                     width={400}
                     className="rounded"
                     src={imageURL}
+                    alt="Image to analyze"
                   />
                 )}
 
