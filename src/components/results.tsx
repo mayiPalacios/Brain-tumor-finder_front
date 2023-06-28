@@ -1,24 +1,42 @@
 "use client";
 
 import Image from "next/image";
-import { useState, useEffect, useContext } from "react";
+import { useState, useEffect, useContext, FormEvent } from "react";
 import { Modal, Button, Form } from "react-bootstrap";
+import { MouseEvent } from "react";
 import axios from "axios";
 import { useRouter } from "next/navigation";
 import useAuth from "@/hooks/useAuth";
 import useAuthNot from "@/hooks/useAuthNot";
-
 import { Typeahead } from "react-bootstrap-typeahead";
 import { useTranslation } from "react-i18next";
 import React, { ChangeEvent } from "react";
+import { Ievaluate, IdiagnosticsResult } from "@/interfaces/evaluate";
+import { error } from "console";
 
 const Results = () => {
+  type User = {
+    first_name: string;
+    last_name: string;
+    gender: string;
+    country: string;
+    id: number;
+    email: string;
+    birthday: string;
+  };
+
+  type UserOption = User;
   const [users, setUsers] = useState([]);
-  const [selected, setSelected] = useState([]);
+  const [selected, setSelected] = useState<UserOption[]>([]);
   const [showModal, setShowModal] = useState(false);
+  const [fileEnd, setFile] = useState<File>();
   const isnotLog = useAuthNot();
+  const [comment, setComment] = useState<string>();
   const isLoggedIn = useAuth();
+  const [validateR, setValidateR] = useState<number>();
   const router = useRouter();
+  const [analyzerA, setAnalizerA] = useState(false);
+  const [reg, setReg] = useState<IdiagnosticsResult>();
   const [showResults, setShowResults] = useState(false);
   const [imageURL, setImageURL] = useState<string | null>(null);
 
@@ -28,6 +46,7 @@ const Results = () => {
 
   const handleFileChange = (event: ChangeEvent<HTMLInputElement>) => {
     const file = event.target.files?.[0];
+    setFile(event.target.files?.[0]);
     const reader = new FileReader();
     reader.onload = (e) => {
       const imageDataURL = e.target?.result as string;
@@ -47,6 +66,11 @@ const Results = () => {
     birthday: "",
   });
 
+  const [newRegister, setNewRegister] = useState({
+    is_approved: Number,
+    remark: "",
+  });
+
   const { t, i18n } = useTranslation();
 
   useEffect(() => {
@@ -56,8 +80,6 @@ const Results = () => {
     }
 
     if (selected.length > 0 && (selected[0] as any).customOption) {
-      console.log("funciona");
-      console.log(selected);
       setShowModal(true);
       setSelected([]);
     }
@@ -86,11 +108,31 @@ const Results = () => {
         setUsers(response.data);
       });
   };
-  console.log(selected.values);
 
-  const handleDiagnostic = () => {};
+  const handleDiagnostic = (event: MouseEvent<HTMLButtonElement>) => {
+    event.preventDefault();
+    const formData = new FormData();
+    if (fileEnd !== undefined) {
+      formData.append("file", fileEnd);
+    }
 
-  const handleSubmit = (event: any) => {
+    axios
+      .post(
+        `https://btf-image-analyzer-api-production.up.railway.app/api/v1/${selected[0].id}/analyze`,
+        formData,
+        {
+          headers: {
+            Authorization: "Bearer " + localStorage.getItem("loginToken"),
+          },
+        }
+      )
+      .then((response) => {
+        setReg(response.data);
+        setAnalizerA(true);
+      });
+  };
+
+  const handleSubmit = (event: FormEvent<HTMLFormElement>) => {
     event.preventDefault();
     axios
       .post(
@@ -107,6 +149,32 @@ const Results = () => {
       });
   };
 
+  const handleMakeReg = (event: MouseEvent<HTMLButtonElement>) => {
+    event.preventDefault();
+    const newReg = {
+      is_approved: validateR,
+      remark: comment,
+    };
+
+    axios
+      .patch(
+        `https://btf-image-analyzer-api-production.up.railway.app/api/v1/diagnostics/${reg?.content.id}/evaluate`,
+        newReg,
+        {
+          headers: {
+            Authorization: "Bearer " + localStorage.getItem("loginToken"),
+          },
+        }
+      )
+      .then((response) => {
+        setShowModal(false);
+        window.alert("se pudo mija");
+      })
+      .catch((error) => {
+        window.alert("no se pudo mija");
+      });
+  };
+
   const handleModal = () => {
     setShowResults(true);
   };
@@ -119,7 +187,6 @@ const Results = () => {
     <div className="container__try container__results d-flex justify-content-center align-items-center">
       {isLoggedIn ? (
         <div className="container__try container__results d-flex justify-content-center align-items-center">
-          {" "}
           <Image
             alt=""
             src="https://as.com/diarioas/imagenes/2020/07/30/actualidad/1596099304_781508_1596099506_noticia_normal.jpg"
@@ -158,11 +225,17 @@ const Results = () => {
           )}
           {showResults && (
             <section className="card d-flex p-5 flex-column gap-4">
-              <div className="d-flex flex-column align-items-center justify-content-center">
-                <h6>{t("results.results")}</h6>
-                <span>{t("results.positiveR")} 75.33%</span>
-                <span>{t("results.negativeR")} 24.67%</span>
-              </div>
+              {analyzerA && (
+                <div className="d-flex flex-column align-items-center justify-content-center">
+                  <h6>{t("results.results")}</h6>
+                  <span>
+                    {t("results.positiveR")} {reg?.content.positive_probability}
+                  </span>
+                  <span>
+                    {t("results.negativeR")} {reg?.content.negative_probability}
+                  </span>
+                </div>
+              )}
 
               <div className="d-flex gap-5">
                 {imageURL && (
@@ -184,12 +257,10 @@ const Results = () => {
                           : `${option.first_name} ${option.last_name}`
                       }
                       onInputChange={handleSearch}
-                      onChange={() => {
-                        () => setSelected;
-                      }}
+                      onChange={(selected: any[]) => setSelected(selected)}
                       options={users}
                       placeholder="Busca un usuario..."
-                      allowNew
+                      allowNew={true}
                       newSelectionPrefix="Crear paciente: "
                     />
 
@@ -268,27 +339,52 @@ const Results = () => {
                     </Modal>
                   </div>
 
-                  <div>
-                    <span>{t("results.validate")}</span>
-                    <div className="d-flex gap-2">
-                      <button className="btn_approved_denied">
-                        <img src="/aprobar.png" alt="" />
-                      </button>
+                  {analyzerA && (
+                    <div>
+                      <div>
+                        <span>{t("results.validate")}</span>
+                        <div className="d-flex gap-2">
+                          <button
+                            className="btn_approved_denied"
+                            onClick={() => setValidateR(1)}
+                          >
+                            <img src="/aprobar.png" alt="" />
+                          </button>
 
-                      <button className="btn_approved_denied">
-                        <img src="/rechazado.png" alt="" />
-                      </button>
+                          <button
+                            className="btn_approved_denied"
+                            onClick={() => setValidateR(0)}
+                          >
+                            <img src="/rechazado.png" alt="" />
+                          </button>
+                        </div>
+                      </div>
+                      <span>{t("results.comments")}</span>
+                      <textarea
+                        className="form-control"
+                        onChange={(e) => setComment(e.target.value)}
+                      />
                     </div>
-                  </div>
-
-                  <span>{t("results.comments")}</span>
-                  <textarea className="form-control" />
+                  )}
                 </div>
               </div>
               <div className="d-flex  align-items-center justify-content-center">
-                <button className="btn btn-secondary  btn__register">
-                  {t("results.btn")}
-                </button>
+                {analyzerA && (
+                  <button
+                    className="btn btn-secondary  btn__register"
+                    onClick={handleMakeReg}
+                  >
+                    {t("results.btn")}
+                  </button>
+                )}
+                {!analyzerA && (
+                  <button
+                    className="btn btn-secondary  btn__register"
+                    onClick={handleDiagnostic}
+                  >
+                    analizar
+                  </button>
+                )}
               </div>
             </section>
           )}
