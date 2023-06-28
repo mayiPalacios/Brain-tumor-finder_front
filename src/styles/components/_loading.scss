@@ -1,16 +1,16 @@
-.box {
+.loader__box {
   display: flex;
   justify-content: center;
   align-items: center;
 }
 
-.container {
+.loader__container {
   background-color: inherit;
   height: 15px;
   width: 100px;
   display: flex;
   position: relative;
-  .circle {
+  .loader__circle {
     width: 10px;
     height: 10px;
     border-radius: 50%;
