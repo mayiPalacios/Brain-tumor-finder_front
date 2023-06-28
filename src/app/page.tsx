@@ -27,7 +27,10 @@ export default function Home() {
           <h1>{t("home.title")}</h1>
         </div>
 
-        <div className="d-flex align-items-end gap-4" style={{ width: "100%" }}>
+        <div
+          className="d-flex align-items-end gap-4"
+          style={{ width: "100%" }}
+        >
           <div className="text-center section__text--firt pyramid-text d-flex flex-column gap-4 ">
             <h2>{t("home.generaldescription")}</h2>
             <p>{t("home.generalDescriptionP")}</p>

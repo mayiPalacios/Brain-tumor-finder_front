@@ -6,37 +6,58 @@ import { AuthProvider } from "@/contexts/AuthContext";
 import { useTranslation } from "react-i18next";
 import { IContactUsPost } from "@/interfaces/contact-us";
 import { postContactUs } from "@/tools/axiosMethod";
+import { LoadingScreen } from "@/components/loading";
+import Swal from "sweetalert2";
+import useLoading from "@/hooks/useLoader";
 
-const Page = () => {
+const Page = ({ }) => {
   const { t, i18n } = useTranslation();
   const [subject, setSubject] = useState("");
   const [content, setContent] = useState("");
   const [name, setName] = useState("");
   const [email, setEmail] = useState("");
-
-  const sendToSupportMessag = async () => {
-    const emailToSent: IContactUsPost = { content, subject, email, name };
-    try {
-      const { success } = await postContactUs(emailToSent);
-      if (!success) {
-        return;
-      }
-    } catch (error) {
-      console.error(error);
+  const [toggleHandler, loading, error, resetError] = useLoading(
+    async (event: React.FormEvent<HTMLFormElement>) => {
+      event.preventDefault();
+      const emailToSent: IContactUsPost = { content, subject, email, name };
+      await postContactUs(emailToSent);
+      handleOnSuccess("Success message sent");
     }
-  };
-
-  const handleContactUs = (event: React.FormEvent<HTMLFormElement>) => {
-    event.preventDefault();
-    sendToSupportMessag();
-  };
+  );
 
   useEffect(() => {
     const { language } = navigator || window.navigator;
     if (language) {
       i18n.changeLanguage(language);
     }
-  }, []);
+  }, [i18n]);
+
+  const handleOnFail = (message: string) => {
+    Swal.fire({
+      title: message,
+      icon: "error",
+      confirmButtonText: "Accept",
+    });
+    resetError()
+  };
+
+  const handleOnSuccess = (message: string) => {
+    Swal.fire({
+      title: message,
+      icon: "success",
+      confirmButtonText: "Accept",
+    });
+    resetError()
+    setName("")
+    setEmail("")
+    setSubject("")
+    setContent("")
+  };
+
+  if (error) {
+    handleOnFail(error.message);
+    return <></>;
+  }
 
   return (
     <AuthProvider>
@@ -57,7 +78,7 @@ const Page = () => {
               />
             </div>
             <div className="col-md-5">
-              <form onSubmit={handleContactUs}>
+              <form onSubmit={toggleHandler}>
                 <div className="mb-3">
                   <label htmlFor="username" className="form-label">
                     {t("contact.name")}
@@ -103,7 +124,7 @@ const Page = () => {
                   />
                 </div>
                 <button type="submit" className="btn btn-primary">
-                  {t("contact.btn")}
+                  {!loading ? t("contact.btn") : <LoadingScreen />}
                 </button>
               </form>
             </div>

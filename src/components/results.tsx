@@ -1,7 +1,7 @@
 "use client";
 
 import Image from "next/image";
-import { useState, useEffect, useContext, FormEvent } from "react";
+import { useState, useEffect, FormEvent } from "react";
 import { Modal, Button, Form } from "react-bootstrap";
 import { MouseEvent } from "react";
 import axios from "axios";
@@ -11,23 +11,16 @@ import useAuthNot from "@/hooks/useAuthNot";
 import { Typeahead } from "react-bootstrap-typeahead";
 import { useTranslation } from "react-i18next";
 import React, { ChangeEvent } from "react";
-import { Ievaluate, IdiagnosticsResult } from "@/interfaces/evaluate";
-import { error } from "console";
+import { IdiagnosticsResult } from "@/interfaces/evaluate";
+import useLoading from "@/hooks/useLoader";
+import { BASE_URL } from "@/constants/base-url.constant";
+import { Option } from "react-bootstrap-typeahead/types/types";
+import { LoadingScreen } from "./loading";
+import Swal from "sweetalert2";
 
 const Results = () => {
-  type User = {
-    first_name: string;
-    last_name: string;
-    gender: string;
-    country: string;
-    id: number;
-    email: string;
-    birthday: string;
-  };
-
-  type UserOption = User;
   const [users, setUsers] = useState([]);
-  const [selected, setSelected] = useState<UserOption[]>([]);
+  const [selected, setSelected] = useState<Option[]>([]);
   const [showModal, setShowModal] = useState(false);
   const [fileEnd, setFile] = useState<File>();
   const isnotLog = useAuthNot();
@@ -39,6 +32,79 @@ const Results = () => {
   const [reg, setReg] = useState<IdiagnosticsResult>();
   const [showResults, setShowResults] = useState(false);
   const [imageURL, setImageURL] = useState<string | null>(null);
+  const [handleUpdatePatientResult, resultLoading, resultError, resetResultError] = useLoading(async (event: MouseEvent<HTMLButtonElement>) => {
+    event.preventDefault();
+    const newReg = {
+      is_approved: validateR,
+      remark: comment,
+    };
+
+    const loginToken = localStorage.getItem("loginToken") || ""
+    await axios
+      .patch(`${BASE_URL}/diagnostics/${reg?.content.id}/evaluate`,
+        newReg,
+        {
+          headers: { Authorization: `Bearer ${loginToken}` }
+        }
+      )
+    setShowModal(false);
+    handleOnUpdatePatientSuccess("Patient was validated successfully")
+  })
+
+  const [handlePatient, patientsLoading, patientError, resetPatientError] = useLoading(async (event: FormEvent<HTMLFormElement>) => {
+    event.preventDefault();
+
+    const loginToken = localStorage.getItem("loginToken") || ""
+    await axios
+      .post(`${BASE_URL}/patients`,
+        newUser,
+        {
+          headers: { Authorization: `Bearer ${loginToken}` }
+        }
+      )
+    setShowModal(false);
+    handleOnPatientSuccess("Patient was created successfully")
+  })
+
+  const [handleDiagnostic, diagnosticsLoading, diagnosticError, resetDiagnosticError] = useLoading(async (event: MouseEvent<HTMLButtonElement>) => {
+    event.preventDefault();
+    const formData = new FormData();
+    if (fileEnd !== undefined) {
+      formData.append("file", fileEnd);
+    }
+    const [patient] = selected
+    if (typeof patient === 'string') {
+      return
+    }
+
+    const loginToken = localStorage.getItem("loginToken") || ""
+    const response = await axios
+      .post(`${BASE_URL}/${patient['id']}/analyze`,
+        formData,
+        {
+          headers: { Authorization: `Bearer ${loginToken}` }
+        }
+      )
+    handleOnDiagnosticSuccess("Diagnostic was executed successfully")
+    setReg(response.data);
+    setAnalizerA(true);
+  })
+
+  const [handleSearch] = useLoading(async (query: string, _: React.ChangeEvent<HTMLInputElement>) => {
+    if (!query) {
+      return;
+    }
+
+    const loginToken = localStorage.getItem("loginToken") || ""
+    const response = await axios
+      .get(
+        `${BASE_URL}/patients/search?q=${query}`,
+        {
+          headers: { Authorization: `Bearer ${loginToken}` },
+        }
+      )
+    setUsers(response.data);
+  })
 
   if (isnotLog) {
     router.push("/login");
@@ -66,11 +132,6 @@ const Results = () => {
     birthday: "",
   });
 
-  const [newRegister, setNewRegister] = useState({
-    is_approved: Number,
-    remark: "",
-  });
-
   const { t, i18n } = useTranslation();
 
   useEffect(() => {
@@ -89,92 +150,6 @@ const Results = () => {
     router.push("/login");
   }
 
-  const handleSearch = (query: any) => {
-    if (!query) {
-      return;
-    }
-
-    axios
-      .get(
-        "https://btf-image-analyzer-api-production.up.railway.app/api/v1/patients/search?q=" +
-          query,
-        {
-          headers: {
-            Authorization: "Bearer " + localStorage.getItem("loginToken"),
-          },
-        }
-      )
-      .then((response) => {
-        setUsers(response.data);
-      });
-  };
-
-  const handleDiagnostic = (event: MouseEvent<HTMLButtonElement>) => {
-    event.preventDefault();
-    const formData = new FormData();
-    if (fileEnd !== undefined) {
-      formData.append("file", fileEnd);
-    }
-
-    axios
-      .post(
-        `https://btf-image-analyzer-api-production.up.railway.app/api/v1/${selected[0].id}/analyze`,
-        formData,
-        {
-          headers: {
-            Authorization: "Bearer " + localStorage.getItem("loginToken"),
-          },
-        }
-      )
-      .then((response) => {
-        setReg(response.data);
-        setAnalizerA(true);
-      });
-  };
-
-  const handleSubmit = (event: FormEvent<HTMLFormElement>) => {
-    event.preventDefault();
-    axios
-      .post(
-        "https://btf-image-analyzer-api-production.up.railway.app/api/v1/patients",
-        newUser,
-        {
-          headers: {
-            Authorization: "Bearer " + localStorage.getItem("loginToken"),
-          },
-        }
-      )
-      .then((response) => {
-        setShowModal(false);
-      });
-  };
-
-  const handleMakeReg = (event: MouseEvent<HTMLButtonElement>) => {
-    event.preventDefault();
-    const newReg = {
-      is_approved: validateR,
-      remark: comment,
-    };
-
-    axios
-      .patch(
-        `https://btf-image-analyzer-api-production.up.railway.app/api/v1/diagnostics/${reg?.content.id}/evaluate`,
-        newReg,
-        {
-          headers: {
-            Authorization: "Bearer " + localStorage.getItem("loginToken"),
-          },
-        }
-      )
-      .then((response) => {
-        setShowModal(false);
-        window.alert("se pudo mija");
-      })
-      .catch((error) => {
-        window.alert("no se pudo mija");
-      });
-  };
-
   const handleModal = () => {
     setShowResults(true);
   };
@@ -183,12 +158,82 @@ const Results = () => {
     setNewUser({ ...newUser, [event.target.name]: event.target.value });
   };
 
+  const handleOnDiagnosticFail = (message: string) => {
+    Swal.fire({
+      title: message,
+      icon: "error",
+      confirmButtonText: "Accept",
+    });
+    resetDiagnosticError()
+  };
+
+  const handleOnDiagnosticSuccess = (message: string) => {
+    Swal.fire({
+      title: message,
+      icon: "success",
+      confirmButtonText: "Accept",
+    });
+    setShowModal(false)
+    resetDiagnosticError()
+  };
+
+  if (diagnosticError) {
+    handleOnDiagnosticFail(diagnosticError.message);
+    return <></>;
+  }
+
+  const handleOnPatientFail = (message: string) => {
+    Swal.fire({
+      title: message,
+      icon: "error",
+      confirmButtonText: "Accept",
+    });
+    resetPatientError()
+  };
+
+  const handleOnPatientSuccess = (message: string) => {
+    Swal.fire({
+      title: message,
+      icon: "success",
+      confirmButtonText: "Accept",
+    });
+    resetPatientError()
+  };
+
+  if (patientError) {
+    handleOnPatientFail(patientError.message);
+    return <></>;
+  }
+
+  const handleOnUpdatePatientFail = (message: string) => {
+    Swal.fire({
+      title: message,
+      icon: "error",
+      confirmButtonText: "Accept",
+    });
+    resetResultError()
+  };
+
+  const handleOnUpdatePatientSuccess = (message: string) => {
+    Swal.fire({
+      title: message,
+      icon: "success",
+      confirmButtonText: "Accept",
+    });
+    resetResultError()
+  };
+
+  if (resultError) {
+    handleOnUpdatePatientFail(resultError.message);
+    return <></>;
+  }
+
   return (
     <div className="container__try container__results d-flex justify-content-center align-items-center">
       {isLoggedIn ? (
         <div className="container__try container__results d-flex justify-content-center align-items-center">
           <Image
-            alt=""
+            alt="Results"
             src="https://as.com/diarioas/imagenes/2020/07/30/actualidad/1596099304_781508_1596099506_noticia_normal.jpg"
             width="500"
             height="300"
@@ -244,6 +289,7 @@ const Results = () => {
                     width={400}
                     className="rounded"
                     src={imageURL}
+                    alt="Image to analyze"
                   />
                 )}
 
@@ -257,7 +303,7 @@ const Results = () => {
                           : `${option.first_name} ${option.last_name}`
                       }
                       onInputChange={handleSearch}
-                      onChange={(selected: any[]) => setSelected(selected)}
+                      onChange={(selected: Option[]) => setSelected(selected)}
                       options={users}
                       placeholder="Busca un usuario..."
                       allowNew={true}
@@ -269,7 +315,7 @@ const Results = () => {
                         <Modal.Title>Crear paciente</Modal.Title>
                       </Modal.Header>
                       <Modal.Body>
-                        <Form onSubmit={handleSubmit}>
+                        <Form onSubmit={handlePatient}>
                           <Form.Group controlId="formBasicFirstName">
                             <Form.Label>Nombre</Form.Label>
                             <Form.Control
@@ -332,7 +378,7 @@ const Results = () => {
                             type="submit"
                             className="mt-3"
                           >
-                            Crear
+                            {!patientsLoading ? "Crear" : <LoadingScreen />}
                           </Button>
                         </Form>
                       </Modal.Body>
@@ -372,9 +418,9 @@ const Results = () => {
                 {analyzerA && (
                   <button
                     className="btn btn-secondary  btn__register"
-                    onClick={handleMakeReg}
+                    onClick={handleUpdatePatientResult}
                   >
-                    {t("results.btn")}
+                    {!resultLoading ? t("results.btn") : <LoadingScreen />}
                   </button>
                 )}
                 {!analyzerA && (
@@ -382,7 +428,7 @@ const Results = () => {
                     className="btn btn-secondary  btn__register"
                     onClick={handleDiagnostic}
                   >
-                    analizar
+                    {!diagnosticsLoading ? "Analizar" : <LoadingScreen />}
                   </button>
                 )}
               </div>

@@ -12,7 +12,6 @@ import { IuserSucces } from "@/interfaces/user";
 const BASE_URL = `https://btf-image-analyzer-api-production.up.railway.app`;
 
 export const postLogin = async (userData: FormData) => {
-  try {
     const req = await axios.post(
       `https://btf-image-analyzer-api-production.up.railway.app/api/v1/auth/login`,
       userData,
@@ -23,24 +22,17 @@ export const postLogin = async (userData: FormData) => {
       }
     );
     return req.data;
-  } catch (error) {
-    console.log(error);
-  }
 };
 
 export const postContactUs = async (
   contactUsDto: IContactUsPost
 ): Promise<IContactUsPostResponse> => {
-  try {
-    const response = await axios.post<
-      IContactUsPostResponse,
-      AxiosResponse<IContactUsPostResponse>
-    >(`${BASE_URL}/api/v1/contact`, contactUsDto);
-    return response.data;
-  } catch (error) {
-    console.error(error);
-    return { success: false };
-  }
+  const response = await axios.post<
+    IContactUsPostResponse,
+    AxiosResponse<IContactUsPostResponse>
+  >(`${BASE_URL}/api/v1/contact`, contactUsDto);
+
+  return response.data;
 };
 
 export const postRegister = async (userD: Isingup) => {
