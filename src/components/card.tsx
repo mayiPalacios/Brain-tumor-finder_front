@@ -3,6 +3,7 @@ import { Idiagnostics, IdiagnosticsContainer } from "@/interfaces/diagnostics";
 import { analysRegister } from "@/tools/axiosMethod";
 import { useEffect, useState } from "react";
 import Image from "next/image";
+import { useTranslation } from "react-i18next";
 
 const Card = () => {
   const [cardDiagnostic, setCardDiagnostic] = useState<IdiagnosticsContainer>();
@@ -11,6 +12,15 @@ const Card = () => {
   const [showModal, setShowModal] = useState(false);
   const [viewM, setViewM] = useState<Idiagnostics>();
   const limit = 5;
+  const { t, i18n } = useTranslation();
+
+  useEffect(() => {
+    const { language } = navigator || window.navigator;
+    window.alert(language);
+    if (language) {
+      i18n.changeLanguage(language);
+    }
+  }, [i18n]);
 
   useEffect(() => {
     const axiosRegisters = async () => {
@@ -28,6 +38,13 @@ const Card = () => {
   }, [offset]);
 
   const handlePageClick = (newOffset: number) => {
+    if (newOffset < 0) {
+      return
+    }
+
+    if (newOffset > totalItems) {
+      return
+    }
     setOffset(newOffset);
   };
 
@@ -144,8 +161,9 @@ const Card = () => {
                   <h6>
                     Verificacion de experto:
                     {viewM?.result_by_doctor && viewM?.result_by_doctor == 0
-                      ? "Rechazado"
-                      : "aprobado"}
+                      ? t('doctors.rejected')
+                      : t('doctors.approved')
+                    }
                   </h6>
                   <p>Comentario de experto:{viewM?.remark && viewM.remark}</p>
                 </div>
@@ -191,7 +209,7 @@ const Card = () => {
                     {diagnostic.patient.last_name}
                   </h3>
                   <span>{diagnostic.created_at}</span>
-                  <span>{`${diagnostic.result_by_doctor}? "aprobado":"rechazado"`}</span>
+                  <span>{diagnostic.result_by_doctor ? t('doctors.approved') : t('doctors.rejected')}</span>
                   <span>resultados:{diagnostic.positive_probability}</span>
                 </div>
                 <button

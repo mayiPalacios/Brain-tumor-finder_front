@@ -40,6 +40,10 @@ i18n
             register: "Register",
             diagnostic: "Diagnostic",
           },
+          doctors: {
+            approved: "Approved",
+            rejected: "Rejected"
+          },
           login: {
             email: "Email",
             password: "Password",
@@ -94,6 +98,10 @@ i18n
             logout: "Cerrar sesión",
             register: "Registros",
             diagnostic: "Diagnostico",
+          },
+          doctors: {
+            approved: "Aprobado",
+            rejected: "Rechazado"
           },
           login: {
             email: "Correo",
