@@ -16,6 +16,10 @@ label {
   color: #f7b114;
 }
 
+.alert-input {
+  display: none;
+}
+
 @media (max-width: 972px) {
   .hideImage {
     display: none;

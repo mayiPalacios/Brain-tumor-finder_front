@@ -12,7 +12,7 @@ import { useTranslation } from "react-i18next";
 import useLoading from "@/hooks/useLoader";
 import { LoadingScreen } from "@/components/loading";
 
-const Page = ({ }) => {
+const Page = ({}) => {
   const [email, setEmail] = useState("");
   const [password, setPassword] = useState("");
   const [firstName, setName] = useState("");
@@ -21,7 +21,12 @@ const Page = ({ }) => {
   const [carnet, setCarnet] = useState("");
   const [country, setCountry] = useState("");
   const [confirmPass, setConfirmP] = useState("");
-  const [handleClickRegister, registerLoading, registerError, resetRegisterError] = useLoading(async (event: React.FormEvent<HTMLFormElement>) => {
+  const [
+    handleClickRegister,
+    registerLoading,
+    registerError,
+    resetRegisterError,
+  ] = useLoading(async (event: React.FormEvent<HTMLFormElement>) => {
     event.preventDefault();
     if (password !== confirmPass) {
       return setCorrectPass(true);
@@ -37,14 +42,14 @@ const Page = ({ }) => {
     };
 
     await postRegister(user);
-    handleOnRegisterSuccess("User successfully register in our system")
-    setEmail("")
-    setName("")
-    setLname("")
-    setCountry("")
-    setPassword("")
-    setConfirmP("")
-  })
+    handleOnRegisterSuccess("User successfully register in our system");
+    setEmail("");
+    setName("");
+    setLname("");
+    setCountry("");
+    setPassword("");
+    setConfirmP("");
+  });
 
   const isLoggedIn = useAuth();
   const router = useRouter();
@@ -67,7 +72,7 @@ const Page = ({ }) => {
       icon: "error",
       confirmButtonText: "Accept",
     });
-    resetRegisterError()
+    resetRegisterError();
   };
 
   const handleOnRegisterSuccess = (message: string) => {
@@ -76,7 +81,7 @@ const Page = ({ }) => {
       icon: "success",
       confirmButtonText: "Accept",
     });
-    resetRegisterError()
+    resetRegisterError();
   };
 
   if (registerError) {
@@ -126,7 +131,8 @@ const Page = ({ }) => {
 
             <div className="respon col-md-6 p-0">
               <div className="d-flex align-items-center justify-content-center h-100">
-                <form className="form__login   gap-4"
+                <form
+                  className="form__login   gap-4"
                   onSubmit={handleClickRegister}
                 >
                   <div className="w-100 d-flex align-items-center justify-content-center">
@@ -186,7 +192,9 @@ const Page = ({ }) => {
                       <input
                         type="password"
                         value={password}
+                        minLength={4}
                         onChange={(e) => setPassword(e.target.value)}
+                        required
                       />
                     </div>
                     <div className="d-flex flex-column gap-3">
@@ -194,7 +202,9 @@ const Page = ({ }) => {
                       <input
                         type="password"
                         value={confirmPass}
+                        minLength={4}
                         onChange={(e) => setConfirmP(e.target.value)}
+                        required
                       />
                       <p
                         style={{ color: "#fff" }}
@@ -206,11 +216,12 @@ const Page = ({ }) => {
                   </div>
 
                   <div className="w-100 d-flex align-items-center justify-content-center">
-                    <button
-                      className="btn btn__login"
-                      type="submit"
-                    >
-                      {!registerLoading ? t("header.signUp") : <LoadingScreen />}
+                    <button className="btn btn__login" type="submit">
+                      {!registerLoading ? (
+                        t("header.signUp")
+                      ) : (
+                        <LoadingScreen />
+                      )}
                     </button>
                   </div>
                 </form>

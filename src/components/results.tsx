@@ -17,6 +17,7 @@ import { BASE_URL } from "@/constants/base-url.constant";
 import { Option } from "react-bootstrap-typeahead/types/types";
 import { LoadingScreen } from "./loading";
 import Swal from "sweetalert2";
+import { IfileValidate } from "@/interfaces/fileValidate";
 
 const Results = () => {
   const [users, setUsers] = useState([]);
@@ -32,89 +33,98 @@ const Results = () => {
   const [reg, setReg] = useState<IdiagnosticsResult>();
   const [showResults, setShowResults] = useState(false);
   const [imageURL, setImageURL] = useState<string | null>(null);
-  const [handleUpdatePatientResult, resultLoading, resultError, resetResultError] = useLoading(async (event: MouseEvent<HTMLButtonElement>) => {
+
+  const [
+    handleUpdatePatientResult,
+    resultLoading,
+    resultError,
+    resetResultError,
+  ] = useLoading(async (event: MouseEvent<HTMLButtonElement>) => {
     event.preventDefault();
     const newReg = {
       is_approved: validateR,
       remark: comment,
     };
 
-    const loginToken = localStorage.getItem("loginToken") || ""
-    await axios
-      .patch(`${BASE_URL}/diagnostics/${reg?.content.id}/evaluate`,
-        newReg,
-        {
-          headers: { Authorization: `Bearer ${loginToken}` }
-        }
-      )
+    const loginToken = localStorage.getItem("loginToken") || "";
+    await axios.patch(
+      `${BASE_URL}/diagnostics/${reg?.content.id}/evaluate`,
+      newReg,
+      {
+        headers: { Authorization: `Bearer ${loginToken}` },
+      }
+    );
     setShowModal(false);
-    handleOnUpdatePatientSuccess("Patient was validated successfully")
-  })
+    handleOnUpdatePatientSuccess("Patient was validated successfully");
+  });
 
-  const [handlePatient, patientsLoading, patientError, resetPatientError] = useLoading(async (event: FormEvent<HTMLFormElement>) => {
-    event.preventDefault();
+  const [handlePatient, patientsLoading, patientError, resetPatientError] =
+    useLoading(async (event: FormEvent<HTMLFormElement>) => {
+      event.preventDefault();
 
-    const loginToken = localStorage.getItem("loginToken") || ""
-    await axios
-      .post(`${BASE_URL}/patients`,
-        newUser,
-        {
-          headers: { Authorization: `Bearer ${loginToken}` }
-        }
-      )
-    setShowModal(false);
-    handleOnPatientSuccess("Patient was created successfully")
-  })
+      const loginToken = localStorage.getItem("loginToken") || "";
+      await axios.post(`${BASE_URL}/patients`, newUser, {
+        headers: { Authorization: `Bearer ${loginToken}` },
+      });
+      setShowModal(false);
+      handleOnPatientSuccess("Patient was created successfully");
+    });
 
-  const [handleDiagnostic, diagnosticsLoading, diagnosticError, resetDiagnosticError] = useLoading(async (event: MouseEvent<HTMLButtonElement>) => {
+  const [
+    handleDiagnostic,
+    diagnosticsLoading,
+    diagnosticError,
+    resetDiagnosticError,
+  ] = useLoading(async (event: MouseEvent<HTMLButtonElement>) => {
     event.preventDefault();
     const formData = new FormData();
     if (fileEnd !== undefined) {
       formData.append("file", fileEnd);
     }
-    const [patient] = selected
-    if (typeof patient === 'string') {
-      return
-    }
-
-    const loginToken = localStorage.getItem("loginToken") || ""
-    const response = await axios
-      .post(`${BASE_URL}/${patient['id']}/analyze`,
-        formData,
-        {
-          headers: { Authorization: `Bearer ${loginToken}` }
-        }
-      )
-    handleOnDiagnosticSuccess("Diagnostic was executed successfully")
-    setReg(response.data);
-    setAnalizerA(true);
-  })
-
-  const [handleSearch] = useLoading(async (query: string, _: React.ChangeEvent<HTMLInputElement>) => {
-    if (!query) {
+    const [patient] = selected;
+    if (typeof patient === "string") {
       return;
     }
 
-    const loginToken = localStorage.getItem("loginToken") || ""
-    const response = await axios
-      .get(
+    const loginToken = localStorage.getItem("loginToken") || "";
+    const response = await axios.post(
+      `${BASE_URL}/${patient["id"]}/analyze`,
+      formData,
+      {
+        headers: { Authorization: `Bearer ${loginToken}` },
+      }
+    );
+    handleOnDiagnosticSuccess("Diagnostic was executed successfully");
+    setReg(response.data);
+    setAnalizerA(true);
+  });
+
+  const [handleSearch] = useLoading(
+    async (query: string, _: React.ChangeEvent<HTMLInputElement>) => {
+      if (!query) {
+        return;
+      }
+
+      const loginToken = localStorage.getItem("loginToken") || "";
+      const response = await axios.get(
         `${BASE_URL}/patients/search?q=${query}`,
         {
           headers: { Authorization: `Bearer ${loginToken}` },
         }
-      )
-    setUsers(response.data);
-  })
+      );
+      setUsers(response.data);
+    }
+  );
 
   if (isnotLog) {
     router.push("/login");
   }
 
-  const handleFileChange = (event: ChangeEvent<HTMLInputElement>) => {
+  const handleFileChange = async (event: ChangeEvent<HTMLInputElement>) => {
     const file = event.target.files?.[0];
     setFile(event.target.files?.[0]);
     const reader = new FileReader();
-    reader.onload = (e) => {
+    reader.onload = async (e) => {
       const imageDataURL = e.target?.result as string;
       setImageURL(imageDataURL);
     };
@@ -150,8 +160,31 @@ const Results = () => {
     router.push("/login");
   }
 
-  const handleModal = () => {
-    setShowResults(true);
+  const handleModal = async () => {
+    const formData = new FormData();
+
+    if (fileEnd !== undefined) {
+      formData.append("file", fileEnd);
+    }
+    const loginToken = localStorage.getItem("loginToken") || "";
+    const response: IfileValidate = await axios.post(
+      `${BASE_URL}/validate`,
+      formData,
+      {
+        headers: { Authorization: `Bearer ${loginToken}` },
+      }
+    );
+    console.log(response.data.is_valid_mri_image);
+    if (response.data.is_valid_mri_image) {
+      setShowResults(true);
+    } else {
+      Swal.fire({
+        title: "imagen no valida",
+        icon: "error",
+        confirmButtonText: "Accept",
+      });
+      resetResultError();
+    }
   };
 
   const handleInputChange = (event: any) => {
@@ -164,7 +197,7 @@ const Results = () => {
       icon: "error",
       confirmButtonText: "Accept",
     });
-    resetDiagnosticError()
+    resetDiagnosticError();
   };
 
   const handleOnDiagnosticSuccess = (message: string) => {
@@ -173,8 +206,8 @@ const Results = () => {
       icon: "success",
       confirmButtonText: "Accept",
     });
-    setShowModal(false)
-    resetDiagnosticError()
+    setShowModal(false);
+    resetDiagnosticError();
   };
 
   if (diagnosticError) {
@@ -188,7 +221,7 @@ const Results = () => {
       icon: "error",
       confirmButtonText: "Accept",
     });
-    resetPatientError()
+    resetPatientError();
   };
 
   const handleOnPatientSuccess = (message: string) => {
@@ -197,7 +230,7 @@ const Results = () => {
       icon: "success",
       confirmButtonText: "Accept",
     });
-    resetPatientError()
+    resetPatientError();
   };
 
   if (patientError) {
@@ -211,7 +244,7 @@ const Results = () => {
       icon: "error",
       confirmButtonText: "Accept",
     });
-    resetResultError()
+    resetResultError();
   };
 
   const handleOnUpdatePatientSuccess = (message: string) => {
@@ -220,7 +253,7 @@ const Results = () => {
       icon: "success",
       confirmButtonText: "Accept",
     });
-    resetResultError()
+    resetResultError();
   };
 
   if (resultError) {
