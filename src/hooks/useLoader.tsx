@@ -1,3 +1,4 @@
+import { AxiosError } from "axios";
 import { useRef, useState, useCallback, useEffect } from "react";
 
 export default function useLoading<F extends (...args: any) => Promise<any>>(
@@ -20,7 +21,21 @@ export default function useLoading<F extends (...args: any) => Promise<any>>(
     try {
       ret = await func(...args);
     } catch (e: any) {
-      setError(e);
+      if (e instanceof AxiosError) {
+        switch (e.code) {
+          case "ERR_BAD_REQUEST":
+            const detail = e.response?.data?.detail
+            if (Array.isArray(detail)) {
+              const [err] = detail
+              setError(new Error(err.msg))
+            } else {
+              setError(new Error(e.response?.data.message))
+            }
+            break;
+        }
+      } else {
+        setError(e);
+      }
     } finally {
       if (isMountedRef.current) {
         setLoading(false);

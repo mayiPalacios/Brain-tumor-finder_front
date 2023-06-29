@@ -47,7 +47,7 @@ const Results = () => {
     };
 
     const loginToken = localStorage.getItem("loginToken") || "";
-    await axios.patch(
+    const response = await axios.patch(
       `${BASE_URL}/diagnostics/${reg?.content.id}/evaluate`,
       newReg,
       {
@@ -55,7 +55,7 @@ const Results = () => {
       }
     );
     setShowModal(false);
-    handleOnUpdatePatientSuccess("Patient was validated successfully");
+    handleOnUpdatePatientSuccess(response.data.message);
   });
 
   const [handlePatient, patientsLoading, patientError, resetPatientError] =
@@ -63,11 +63,11 @@ const Results = () => {
       event.preventDefault();
 
       const loginToken = localStorage.getItem("loginToken") || "";
-      await axios.post(`${BASE_URL}/patients`, newUser, {
+      const response = await axios.post(`${BASE_URL}/patients`, newUser, {
         headers: { Authorization: `Bearer ${loginToken}` },
       });
       setShowModal(false);
-      handleOnPatientSuccess("Patient was created successfully");
+      handleOnPatientSuccess(response.data.message);
     });
 
   const [

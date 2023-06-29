@@ -57,6 +57,7 @@ i18n
             cards: "Doctors cards",
             Country: "Country",
             passConfirm: "password confirmation",
+            success: "User successfully register in our system"
           },
           contact: {
             title: "Contact us for more information",
@@ -116,6 +117,7 @@ i18n
             cards: "credencial de doctor",
             Country: "pais",
             passConfirm: "confirmacion de contraseña",
+            success: "El usuario se registro con exito"
           },
           contact: {
             title: "Contactanos para más información",

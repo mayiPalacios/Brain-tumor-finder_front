@@ -13,6 +13,7 @@ import useLoading from "@/hooks/useLoader";
 import { LoadingScreen } from "@/components/loading";
 
 const Page = ({}) => {
+  const { t, i18n } = useTranslation();
   const [email, setEmail] = useState("");
   const [password, setPassword] = useState("");
   const [firstName, setName] = useState("");
@@ -42,7 +43,7 @@ const Page = ({}) => {
     };
 
     await postRegister(user);
-    handleOnRegisterSuccess("User successfully register in our system");
+    handleOnRegisterSuccess(t("signup.success"));
     setEmail("");
     setName("");
     setLname("");
@@ -53,7 +54,6 @@ const Page = ({}) => {
 
   const isLoggedIn = useAuth();
   const router = useRouter();
-  const { t, i18n } = useTranslation();
 
   useEffect(() => {
     const { language } = navigator || window.navigator;
