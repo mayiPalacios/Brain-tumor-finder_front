@@ -13,7 +13,7 @@ import useLoading from "@/hooks/useLoader";
 import { LoadingScreen } from "@/components/loading";
 import Swal from "sweetalert2";
 
-const Page = ({ }) => {
+const Page = ({}) => {
   const [email, setEmail] = useState("");
   const [password, setPassword] = useState("");
   const isLoggedIn = useAuth();
@@ -21,7 +21,7 @@ const Page = ({ }) => {
     async (event: React.FormEvent<HTMLFormElement>) => {
       event.preventDefault();
       if (loading) {
-        return
+        return;
       }
 
       const formData = new FormData();
@@ -30,7 +30,7 @@ const Page = ({ }) => {
       const response: IloginSuccess | undefined = await postLogin(formData);
       if (response) {
         localStorage.setItem("loginToken", response.access_token);
-        router.push("/try");
+        router.push("/results");
       }
     }
   );
@@ -39,6 +39,7 @@ const Page = ({ }) => {
 
   useEffect(() => {
     const { language } = navigator || window.navigator;
+    window.alert(language);
     if (language) {
       i18n.changeLanguage(language);
     }
@@ -57,7 +58,7 @@ const Page = ({ }) => {
       icon: "error",
       confirmButtonText: "Accept",
     });
-    resetError()
+    resetError();
   };
 
   if (error) {
