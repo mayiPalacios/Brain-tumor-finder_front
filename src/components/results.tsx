@@ -71,11 +71,11 @@ const Results = () => {
       event.preventDefault();
 
       const loginToken = localStorage.getItem("loginToken") || "";
-      await axios.post(`${BASE_URL}/patients`, newUser, {
+      const response = await axios.post(`${BASE_URL}/patients`, newUser, {
         headers: { Authorization: `Bearer ${loginToken}` },
       });
       setShowModal(false);
-      handleOnPatientSuccess("Patient was created successfully");
+      handleOnPatientSuccess(response.data.message);
     });
 
   const [

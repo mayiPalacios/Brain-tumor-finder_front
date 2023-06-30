@@ -20,8 +20,8 @@ const Page = ({ }) => {
     async (event: React.FormEvent<HTMLFormElement>) => {
       event.preventDefault();
       const emailToSent: IContactUsPost = { content, subject, email, name };
-      await postContactUs(emailToSent);
-      handleOnSuccess("Success message sent");
+      const response = await postContactUs(emailToSent);
+      handleOnSuccess(response.message);
     }
   );
 
