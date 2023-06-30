@@ -26,12 +26,8 @@ export const postLogin = async (userData: FormData) => {
 
 export const postContactUs = async (
   contactUsDto: IContactUsPost
-): Promise<IContactUsPostResponse> => {
-  const response = await axios.post<
-    IContactUsPostResponse,
-    AxiosResponse<IContactUsPostResponse>
-  >(`${BASE_URL}/api/v1/contact`, contactUsDto);
-
+) => {
+  const response = await axios.post(`${BASE_URL}/api/v1/contact`, contactUsDto);
   return response.data;
 };
 

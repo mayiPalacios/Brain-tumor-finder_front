@@ -40,6 +40,10 @@ i18n
             register: "Register",
             diagnostic: "Diagnostic",
           },
+          doctors: {
+            approved: "Approved",
+            rejected: "Rejected"
+          },
           login: {
             email: "Email",
             password: "Password",
@@ -53,6 +57,7 @@ i18n
             cards: "Doctors cards",
             Country: "Country",
             passConfirm: "password confirmation",
+            success: "User successfully register in our system"
           },
           contact: {
             title: "Contact us for more information",
@@ -95,6 +100,10 @@ i18n
             register: "Registros",
             diagnostic: "Diagnostico",
           },
+          doctors: {
+            approved: "Aprobado",
+            rejected: "Rechazado"
+          },
           login: {
             email: "Correo",
             password: "contraseña",
@@ -108,6 +117,7 @@ i18n
             cards: "credencial de doctor",
             Country: "pais",
             passConfirm: "confirmacion de contraseña",
+            success: "El usuario se registro con exito"
           },
           contact: {
             title: "Contactanos para más información",
