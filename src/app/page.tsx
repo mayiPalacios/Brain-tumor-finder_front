@@ -5,16 +5,28 @@ import Image from "next/image";
 import "../../i18n";
 import { useEffect } from "react";
 import { useTranslation } from "react-i18next";
-
+import { useRouter } from "next/navigation";
+import useAuth from "@/hooks/useAuth";
 export default function Home() {
   const { t, i18n } = useTranslation();
 
+  const isLoggedIn = useAuth();
   useEffect(() => {
     const { language } = navigator || window.navigator;
     if (language) {
       i18n.changeLanguage(language);
     }
   }, []);
+
+  const router = useRouter();
+
+  const handleTry = () => {
+    if (isLoggedIn) {
+      router.push("/results");
+    } else {
+      router.push("/login");
+    }
+  };
 
   return (
     <main>
@@ -27,10 +39,7 @@ export default function Home() {
           <h1>{t("home.title")}</h1>
         </div>
 
-        <div
-          className="d-flex align-items-end gap-4"
-          style={{ width: "100%" }}
-        >
+        <div className="d-flex align-items-end gap-4" style={{ width: "100%" }}>
           <div className="text-center section__text--firt pyramid-text d-flex flex-column gap-4 ">
             <h2>{t("home.generaldescription")}</h2>
             <p>{t("home.generalDescriptionP")}</p>
@@ -83,7 +92,7 @@ export default function Home() {
             >
               {t("home.inviteDescription")}
             </h2>
-            <button className="btn__home ">
+            <button className="btn__home " onClick={handleTry}>
               <span>{t("home.btn")}</span>
             </button>
           </div>
