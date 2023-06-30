@@ -39,7 +39,7 @@ const Page = ({}) => {
 
   useEffect(() => {
     const { language } = navigator || window.navigator;
-    window.alert(language);
+
     if (language) {
       i18n.changeLanguage(language);
     }

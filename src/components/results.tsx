@@ -47,15 +47,23 @@ const Results = () => {
     };
 
     const loginToken = localStorage.getItem("loginToken") || "";
-    await axios.patch(
-      `${BASE_URL}/diagnostics/${reg?.content.id}/evaluate`,
-      newReg,
-      {
-        headers: { Authorization: `Bearer ${loginToken}` },
-      }
-    );
-    setShowModal(false);
-    handleOnUpdatePatientSuccess("Patient was validated successfully");
+    if (newReg.is_approved !== undefined && newReg.remark !== undefined) {
+      await axios.patch(
+        `${BASE_URL}/diagnostics/${reg?.content.id}/evaluate`,
+        newReg,
+        {
+          headers: { Authorization: `Bearer ${loginToken}` },
+        }
+      );
+      setShowModal(false);
+      handleOnUpdatePatientSuccess("Patient was validated successfully");
+    } else {
+      Swal.fire({
+        title: "por favor selecciona todo lo que se le pide",
+        icon: "error",
+        confirmButtonText: "Accept",
+      });
+    }
   });
 
   const [handlePatient, patientsLoading, patientError, resetPatientError] =
