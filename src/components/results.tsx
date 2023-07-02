@@ -114,7 +114,7 @@ const Results = () => {
         return;
       }
       if (timerRef.current) {
-        clearTimeout(timerRef.current as number);
+        clearTimeout(timerRef.current as NodeJS.Timeout);
       }
       const loginToken = localStorage.getItem("loginToken") || "";
       timerRef.current = setTimeout(async () => {
