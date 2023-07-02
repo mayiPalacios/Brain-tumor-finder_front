@@ -25,6 +25,7 @@ const Page = ({ }) => {
         setEmail({ value: email.value, isCorrect: !!email.value })
         setSubject({ value: subject.value, isCorrect: !!subject.value })
         setContent({ value: content.value, isCorrect: !!content.value })
+        return;
       }
 
       if (!(subject.isCorrect && email.isCorrect && name.isCorrect && content.isCorrect)) {
