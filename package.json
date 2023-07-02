@@ -42,7 +42,8 @@
     "sort-by": "^1.2.0",
     "sweetalert2": "^11.7.12",
     "sweetalert2-react-content": "^5.0.7",
-    "typescript": "5.0.4"
+    "typescript": "5.0.4",
+    "use-debounce": "^9.0.4"
   },
   "devDependencies": {
     "@types/jquery": "^3.5.16",

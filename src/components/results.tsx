@@ -1,7 +1,7 @@
 "use client";
 
 import Image from "next/image";
-import { useState, useEffect, FormEvent } from "react";
+import {useState, useEffect, FormEvent, useRef} from "react";
 import { Modal, Button, Form } from "react-bootstrap";
 import { MouseEvent } from "react";
 import axios from "axios";
@@ -106,21 +106,28 @@ const Results = () => {
     setReg(response.data);
     setAnalizerA(true);
   });
+  const timerRef = useRef<NodeJS.Timeout | null>(null);
 
   const [handleSearch] = useLoading(
     async (query: string, _: React.ChangeEvent<HTMLInputElement>) => {
       if (!query) {
         return;
       }
-
+      if (timerRef.current) {
+        clearTimeout(timerRef.current as number);
+      }
       const loginToken = localStorage.getItem("loginToken") || "";
-      const response = await axios.get(
-        `${BASE_URL}/patients/search?q=${query}`,
-        {
-          headers: { Authorization: `Bearer ${loginToken}` },
-        }
-      );
-      setUsers(response.data);
+      timerRef.current = setTimeout(async () => {
+        const response = await axios.get(
+            `${BASE_URL}/patients/search?q=${query}`,
+            {
+              headers: {Authorization: `Bearer ${loginToken}`},
+            }
+        );
+        setUsers(response.data);
+      }, 3000);
+
+
     }
   );
 
