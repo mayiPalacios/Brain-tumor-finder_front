@@ -95,6 +95,14 @@ const Results = () => {
     }
 
     const loginToken = localStorage.getItem("loginToken") || "";
+    if (patient==undefined){
+      Swal.fire({
+        title: "Por favor selecciona un paciente antes de continuar",
+        icon: "error",
+        confirmButtonText: "Accept",
+      });
+      return
+    }
     const response = await axios.post(
       `${BASE_URL}/${patient["id"]}/analyze`,
       formData,
