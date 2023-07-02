@@ -237,7 +237,8 @@ const Results = () => {
     handleOnDiagnosticFail(diagnosticError.message);
     return <></>;
   }
-
+  const today = new Date();
+  const dateString = `${today.getFullYear()}-${String(today.getMonth() + 1).padStart(2, '0')}-${String(today.getDate()).padStart(2, '0')}`;
   const handleOnPatientFail = (message: string) => {
     Swal.fire({
       title: message,
@@ -425,6 +426,7 @@ const Results = () => {
                             <Form.Control
                               type="date"
                               name="birthday"
+                              max={dateString}
                               onChange={handleInputChange}
                             />
                           </Form.Group>
