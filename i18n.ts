@@ -75,6 +75,9 @@ i18n
             btn: "Save",
             comments: "comments",
           },
+          required: {
+            error: "Please fill this field"
+          }
         },
       },
       es: {
@@ -135,6 +138,9 @@ i18n
             btn: "Guardar",
             comments: "comentarios",
           },
+          required: {
+            error: "Por favor rellena este campo"
+          }
         },
       },
     },
