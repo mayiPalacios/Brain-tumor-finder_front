@@ -1,56 +1,29 @@
-.loader__box {
-  display: flex;
-  justify-content: center;
-  align-items: center;
-}
-
-.loader__container {
-  background-color: inherit;
-  height: 15px;
-  width: 100px;
-  display: flex;
+.loader {
+  width: 12px;
+  height: 12px;
+  border-radius: 50%;
+  display: block;
+  margin:15px auto;
   position: relative;
-  .loader__circle {
-    width: 10px;
-    height: 10px;
-    border-radius: 50%;
-    background-color: #fff;
-    animation: move 800ms linear 0ms infinite;
-    margin-right: 30px;
-
-    &:first-child {
-      position: absolute;
-      top: 0;
-      left: 0;
-      animation: grow 800ms linear 0ms infinite;
-    }
-
-    &:last-child {
-      position: absolute;
-      top: 0;
-      right: 0;
-      margin-right: 0;
-      animation: grow 800ms linear 0s infinite reverse;
-    }
-  }
+  color: #FFF;
+  box-sizing: border-box;
+  animation: animloader 2s linear infinite;
 }
 
-@keyframes grow {
-  from {
-    transform: scale(0, 0);
-    opacity: 0;
+@keyframes animloader {
+  0% {
+    box-shadow: 14px 0 0 -2px,  38px 0 0 -2px,  -14px 0 0 -2px,  -38px 0 0 -2px;
   }
-  to {
-    transform: scale(1, 1);
-    opacity: 1;
+  25% {
+    box-shadow: 14px 0 0 -2px,  38px 0 0 -2px,  -14px 0 0 -2px,  -38px 0 0 2px;
   }
-}
-
-@keyframes move {
-  from {
-    transform: translateX(0px);
+  50% {
+    box-shadow: 14px 0 0 -2px,  38px 0 0 -2px,  -14px 0 0 2px,  -38px 0 0 -2px;
   }
-  to {
-    transform: translateX(45px);
+  75% {
+    box-shadow: 14px 0 0 2px,  38px 0 0 -2px,  -14px 0 0 -2px,  -38px 0 0 -2px;
+  }
+  100% {
+    box-shadow: 14px 0 0 -2px,  38px 0 0 2px,  -14px 0 0 -2px,  -38px 0 0 -2px;
   }
 }

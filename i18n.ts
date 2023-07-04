@@ -52,12 +52,13 @@ i18n
           },
           signup: {
             register: "Sign Up",
-            firtsN: "firts name",
-            lastN: "firts lastname",
+            firstN: "First name",
+            lastN: "First lastname",
             cards: "Doctors cards",
             Country: "Country",
-            passConfirm: "password confirmation",
-            success: "User successfully register in our system"
+            passConfirm: "Password confirmation",
+            success: "User successfully register in our system",
+            differentPassword: "Its different password"
           },
           contact: {
             title: "Contact us for more information",
@@ -73,8 +74,13 @@ i18n
             name: "Name of patient",
             validate: "Validate Results",
             btn: "Save",
-            comments: "comments",
+            comments: "Comments",
+            analyze: "Analyze",
+            createPatient: "Create"
           },
+          required: {
+            error: "Please fill this field"
+          }
         },
       },
       es: {
@@ -117,7 +123,8 @@ i18n
             cards: "credencial de doctor",
             Country: "pais",
             passConfirm: "confirmacion de contraseña",
-            success: "El usuario se registro con exito"
+            success: "El usuario se registro con exito",
+            differentPassword: "La contraseña es diferente"
           },
           contact: {
             title: "Contactanos para más información",
@@ -133,8 +140,13 @@ i18n
             name: "Nombre del paciente",
             validate: "Validar Resultados",
             btn: "Guardar",
-            comments: "comentarios",
+            comments: "Comentarios",
+            analyze: "Analizar",
+            createPatient: "Crear"
           },
+          required: {
+            error: "Por favor rellena este campo"
+          }
         },
       },
     },
