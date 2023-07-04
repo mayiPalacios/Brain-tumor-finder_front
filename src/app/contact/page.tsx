@@ -6,10 +6,10 @@ import { AuthProvider } from "@/contexts/AuthContext";
 import { useTranslation } from "react-i18next";
 import { IContactUsPost } from "@/interfaces/contact-us";
 import { postContactUs } from "@/tools/axiosMethod";
-import { LoadingScreen } from "@/components/loading";
 import Swal from "sweetalert2";
 import useLoading from "@/hooks/useLoader";
 import { InputError } from "@/interfaces/input-error";
+import { LoadingButton } from "@/components/loading-button";
 
 const Page = ({ }) => {
   const { t, i18n } = useTranslation();
@@ -153,8 +153,9 @@ const Page = ({ }) => {
                   />
                   <p className="error__message">{!content.isCorrect && t("required.error")}</p>
                 </div>
-                <button type="submit" className="btn btn-primary">
-                  {!loading ? t("contact.btn") : <LoadingScreen />}
+                <button type="submit" className="btn btn__contact__us d-flex align-items-center justify-content-center gap-2 text-uppercase">
+                  {t("contact.btn")}
+                  {loading && <LoadingButton />}
                 </button>
               </form>
             </div>

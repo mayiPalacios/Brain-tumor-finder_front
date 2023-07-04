@@ -1,7 +1,7 @@
 "use client";
 
 import Image from "next/image";
-import {useState, useEffect, FormEvent, useRef} from "react";
+import { useState, useEffect, FormEvent, useRef } from "react";
 import { Modal, Button, Form } from "react-bootstrap";
 import { MouseEvent } from "react";
 import axios from "axios";
@@ -15,9 +15,9 @@ import { IdiagnosticsResult } from "@/interfaces/evaluate";
 import useLoading from "@/hooks/useLoader";
 import { BASE_URL } from "@/constants/base-url.constant";
 import { Option } from "react-bootstrap-typeahead/types/types";
-import { LoadingScreen } from "./loading";
 import Swal from "sweetalert2";
 import { IfileValidate } from "@/interfaces/fileValidate";
+import { LoadingButton } from "./loading-button";
 
 const Results = () => {
   const [users, setUsers] = useState([]);
@@ -95,7 +95,7 @@ const Results = () => {
     }
 
     const loginToken = localStorage.getItem("loginToken") || "";
-    if (patient==undefined){
+    if (patient == undefined) {
       Swal.fire({
         title: "Por favor selecciona un paciente antes de continuar",
         icon: "error",
@@ -127,10 +127,10 @@ const Results = () => {
       const loginToken = localStorage.getItem("loginToken") || "";
       timerRef.current = setTimeout(async () => {
         const response = await axios.get(
-            `${BASE_URL}/patients/search?q=${query}`,
-            {
-              headers: {Authorization: `Bearer ${loginToken}`},
-            }
+          `${BASE_URL}/patients/search?q=${query}`,
+          {
+            headers: { Authorization: `Bearer ${loginToken}` },
+          }
         );
         setUsers(response.data);
       }, 3000);
@@ -436,7 +436,8 @@ const Results = () => {
                             type="submit"
                             className="mt-3"
                           >
-                            {!patientsLoading ? "Crear" : <LoadingScreen />}
+                            {t("results.createPatient")}
+                            {patientsLoading && <LoadingButton />}
                           </Button>
                         </Form>
                       </Modal.Body>
@@ -475,18 +476,20 @@ const Results = () => {
               <div className="d-flex  align-items-center justify-content-center">
                 {analyzerA && (
                   <button
-                    className="btn btn-secondary  btn__register"
+                    className="d-flex align-items-center justify-content-center btn btn-secondary btn__register gap-2 text-uppercase"
                     onClick={handleUpdatePatientResult}
                   >
-                    {!resultLoading ? t("results.btn") : <LoadingScreen />}
+                    {t("results.btn")}
+                    {resultLoading && <LoadingButton />}
                   </button>
                 )}
                 {!analyzerA && (
                   <button
-                    className="btn btn-secondary  btn__register"
+                    className="d-flex align-items-center justify-content-center btn btn-secondary btn__register gap-2 text-uppercase"
                     onClick={handleDiagnostic}
                   >
-                    {!diagnosticsLoading ? "Analizar" : <LoadingScreen />}
+                    {t("results.analyze")}
+                    {diagnosticsLoading && <LoadingButton />}
                   </button>
                 )}
               </div>

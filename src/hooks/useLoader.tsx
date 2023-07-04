@@ -28,6 +28,8 @@ export default function useLoading<F extends (...args: any) => Promise<any>>(
             if (Array.isArray(detail)) {
               const [err] = detail
               setError(new Error(err.msg))
+            } else if (typeof detail === 'string') {
+              setError(new Error(e.response?.data.detail))
             } else {
               setError(new Error(e.response?.data.message))
             }

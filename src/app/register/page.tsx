@@ -1,6 +1,5 @@
 import Navbar from "@/components/navbar";
 import { memo } from "react";
-import Image from "next/image";
 import { AuthProvider } from "@/contexts/AuthContext";
 import Card from "@/components/card";
 
