@@ -73,8 +73,10 @@ i18n
             name: "Name of patient",
             validate: "Validate Results",
             btn: "Save",
+            imgAlert: "Invalid image",
             comments: "comments",
             Analyze: "Analyze",
+            alert: "Please select all that is requested",
           },
           patientModal: {
             title: "Create Patient",
@@ -156,6 +158,8 @@ i18n
             validate: "Validar Resultados",
             btn: "Guardar",
             comments: "comentarios",
+            alert: "por favor selecciona todo lo que se le pide",
+            imgAlert: "Imagen no valida",
           },
           patientModal: {
             title: "Crear Paciente",

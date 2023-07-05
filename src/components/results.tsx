@@ -61,7 +61,7 @@ const Results = () => {
       handleOnUpdatePatientSuccess("Patient was validated successfully");
     } else {
       Swal.fire({
-        title: "por favor selecciona todo lo que se le pide",
+        title: t("results.alert"),
         icon: "error",
         confirmButtonText: "Accept",
       });
@@ -189,7 +189,7 @@ const Results = () => {
       setShowResults(true);
     } else {
       Swal.fire({
-        title: "imagen no valida",
+        title: t("results.imgAlert"),
         icon: "error",
         confirmButtonText: "Accept",
       });
