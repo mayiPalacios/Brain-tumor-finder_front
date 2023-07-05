@@ -80,6 +80,8 @@ i18n
             alert: "Please select all that is requested",
             succesAnalyze: "Diagnostic was executed successfully",
             btnImg: "Upload file",
+            alertPat: "Please select a patient before continuing",
+            selectFile: "Select a file",
           },
           patientModal: {
             title: "Create Patient",
@@ -170,6 +172,8 @@ i18n
             Analyze: "Analizar",
             succesAnalyze: "Diagnostico fue ejecutado con exito",
             btnImg: "Subir archivo",
+            alertPat: "Por favor selecciona un paciente antes de continuar",
+            selectFile: "Elige el archivo",
           },
           patientModal: {
             title: "Crear Paciente",

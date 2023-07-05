@@ -1,6 +1,6 @@
 .container__try {
-  height: 100vh;
-
+  min-height: 100vh;
+  height: auto;
   background-position: center;
   background-repeat: no-repeat;
   width: 100%;
@@ -13,5 +13,12 @@
   }
   .btn__file {
     width: 8vw;
+  }
+}
+
+@media (max-width: 585px) {
+  .container__analyze {
+    display: flex;
+    flex-direction: column;
   }
 }
