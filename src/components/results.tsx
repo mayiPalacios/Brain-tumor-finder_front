@@ -24,6 +24,8 @@ const Results = () => {
   const [selected, setSelected] = useState<Option[]>([]);
   const [showModal, setShowModal] = useState(false);
   const [fileEnd, setFile] = useState<File>();
+  const [btnApproved, setApproved] = useState(false);
+  const [btnDenied, setDenied] = useState(true);
   const isnotLog = useAuthNot();
   const [comment, setComment] = useState<string>();
   const isLoggedIn = useAuth();
@@ -48,8 +50,9 @@ const Results = () => {
 
     const loginToken = localStorage.getItem("loginToken") || "";
     if (newReg.is_approved !== undefined && newReg.remark !== undefined) {
+      const language = localStorage.getItem("lan");
       await axios.patch(
-        `${BASE_URL}/diagnostics/${reg?.content.id}/evaluate`,
+        `${BASE_URL}/diagnostics/${reg?.content.id}/evaluate?lan=${language}`,
         newReg,
         {
           headers: { Authorization: `Bearer ${loginToken}` },
@@ -59,9 +62,9 @@ const Results = () => {
       handleOnUpdatePatientSuccess("Patient was validated successfully");
     } else {
       Swal.fire({
-        title: "por favor selecciona todo lo que se le pide",
+        title: t("results.alert"),
         icon: "error",
-        confirmButtonText: "Accept",
+        confirmButtonText: t("register.btnAccept"),
       });
     }
   });
@@ -71,9 +74,14 @@ const Results = () => {
       event.preventDefault();
 
       const loginToken = localStorage.getItem("loginToken") || "";
-      const response = await axios.post(`${BASE_URL}/patients`, newUser, {
-        headers: { Authorization: `Bearer ${loginToken}` },
-      });
+      const language = localStorage.getItem("lan");
+      const response = await axios.post(
+        `${BASE_URL}/patients?lan=${language}`,
+        newUser,
+        {
+          headers: { Authorization: `Bearer ${loginToken}` },
+        }
+      );
       setShowModal(false);
       handleOnPatientSuccess(response.data.message);
     });
@@ -99,9 +107,9 @@ const Results = () => {
       Swal.fire({
         title: "Por favor selecciona un paciente antes de continuar",
         icon: "error",
-        confirmButtonText: "Accept",
+        confirmButtonText: t("register.btnAccept"),
       });
-      return
+      return;
     }
     const response = await axios.post(
       `${BASE_URL}/${patient["id"]}/analyze`,
@@ -110,7 +118,7 @@ const Results = () => {
         headers: { Authorization: `Bearer ${loginToken}` },
       }
     );
-    handleOnDiagnosticSuccess("Diagnostic was executed successfully");
+    handleOnDiagnosticSuccess(`${t("results.succesAnalyze")}`);
     setReg(response.data);
     setAnalizerA(true);
   });
@@ -134,8 +142,6 @@ const Results = () => {
         );
         setUsers(response.data);
       }, 3000);
-
-
     }
   );
 
@@ -202,9 +208,9 @@ const Results = () => {
       setShowResults(true);
     } else {
       Swal.fire({
-        title: "imagen no valida",
+        title: t("results.imgAlert"),
         icon: "error",
-        confirmButtonText: "Accept",
+        confirmButtonText: t("register.btnAccept"),
       });
       resetResultError();
     }
@@ -218,7 +224,7 @@ const Results = () => {
     Swal.fire({
       title: message,
       icon: "error",
-      confirmButtonText: "Accept",
+      confirmButtonText: t("register.btnAccept"),
     });
     resetDiagnosticError();
   };
@@ -227,7 +233,7 @@ const Results = () => {
     Swal.fire({
       title: message,
       icon: "success",
-      confirmButtonText: "Accept",
+      confirmButtonText: t("register.btnAccept"),
     });
     setShowModal(false);
     resetDiagnosticError();
@@ -238,12 +244,14 @@ const Results = () => {
     return <></>;
   }
   const today = new Date();
-  const dateString = `${today.getFullYear()}-${String(today.getMonth() + 1).padStart(2, '0')}-${String(today.getDate()).padStart(2, '0')}`;
+  const dateString = `${today.getFullYear()}-${String(
+    today.getMonth() + 1
+  ).padStart(2, "0")}-${String(today.getDate()).padStart(2, "0")}`;
   const handleOnPatientFail = (message: string) => {
     Swal.fire({
       title: message,
       icon: "error",
-      confirmButtonText: "Accept",
+      confirmButtonText: t("register.btnAccept"),
     });
     resetPatientError();
   };
@@ -252,7 +260,7 @@ const Results = () => {
     Swal.fire({
       title: message,
       icon: "success",
-      confirmButtonText: "Accept",
+      confirmButtonText: t("register.btnAccept"),
     });
     resetPatientError();
   };
@@ -266,7 +274,7 @@ const Results = () => {
     Swal.fire({
       title: message,
       icon: "error",
-      confirmButtonText: "Accept",
+      confirmButtonText: t("register.btnAccept"),
     });
     resetResultError();
   };
@@ -275,7 +283,7 @@ const Results = () => {
     Swal.fire({
       title: message,
       icon: "success",
-      confirmButtonText: "Accept",
+      confirmButtonText: t("register.btnAccept"),
     });
     resetResultError();
   };
@@ -284,6 +292,19 @@ const Results = () => {
     handleOnUpdatePatientFail(resultError.message);
     return <></>;
   }
+
+  const handleBtnApproved = () => {
+    setApproved(true);
+    setDenied(true);
+    setValidateR(0);
+  };
+
+  const handleBtnDenied = () => {
+    setDenied(false);
+    setApproved(false);
+
+    setValidateR(1);
+  };
 
   return (
     <div className="container__try container__results d-flex justify-content-center align-items-center">
@@ -320,7 +341,7 @@ const Results = () => {
                   className="btn__file btn btn-primary"
                   onClick={handleModal}
                 >
-                  Subir archivo
+                  {t("results.btnImg")}
                 </button>
               </section>
             </div>
@@ -369,12 +390,12 @@ const Results = () => {
 
                     <Modal show={showModal} onHide={() => setShowModal(false)}>
                       <Modal.Header closeButton>
-                        <Modal.Title>Crear paciente</Modal.Title>
+                        <Modal.Title>{t("patientModal.title")}</Modal.Title>
                       </Modal.Header>
                       <Modal.Body>
                         <Form onSubmit={handlePatient}>
                           <Form.Group controlId="formBasicFirstName">
-                            <Form.Label>Nombre</Form.Label>
+                            <Form.Label>{t("patientModal.name")}</Form.Label>
                             <Form.Control
                               type="text"
                               name="first_name"
@@ -383,7 +404,9 @@ const Results = () => {
                           </Form.Group>
 
                           <Form.Group controlId="formBasicLastName">
-                            <Form.Label>Apellido</Form.Label>
+                            <Form.Label>
+                              {t("patientModal.lastname")}
+                            </Form.Label>
                             <Form.Control
                               type="text"
                               name="last_name"
@@ -392,7 +415,7 @@ const Results = () => {
                           </Form.Group>
 
                           <Form.Group controlId="formBasicGender">
-                            <Form.Label>Género</Form.Label>
+                            <Form.Label>{t("patientModal.gender")}</Form.Label>
                             <Form.Control
                               as="select"
                               name="gender"
@@ -413,7 +436,7 @@ const Results = () => {
                           </Form.Group>
 
                           <Form.Group controlId="formBasicEmail">
-                            <Form.Label>Email</Form.Label>
+                            <Form.Label>{t("patientModal.email")}</Form.Label>
                             <Form.Control
                               type="email"
                               name="email"
@@ -422,7 +445,9 @@ const Results = () => {
                           </Form.Group>
 
                           <Form.Group controlId="formBasicBirthday">
-                            <Form.Label>Fecha de Nacimiento</Form.Label>
+                            <Form.Label>
+                              {t("patientModal.dateBirth")}
+                            </Form.Label>
                             <Form.Control
                               type="date"
                               name="birthday"
@@ -436,7 +461,7 @@ const Results = () => {
                             type="submit"
                             className="mt-3"
                           >
-                            {t("results.createPatient")}
+                            {t("patientModal.create")}
                             {patientsLoading && <LoadingButton />}
                           </Button>
                         </Form>
@@ -450,15 +475,19 @@ const Results = () => {
                         <span>{t("results.validate")}</span>
                         <div className="d-flex gap-2">
                           <button
-                            className="btn_approved_denied"
-                            onClick={() => setValidateR(1)}
+                            className={`btn_approved_denied  ${
+                              btnApproved ? "btn_approved" : ""
+                            }`}
+                            onClick={handleBtnApproved}
                           >
                             <img src="/aprobar.png" alt="" />
                           </button>
 
                           <button
-                            className="btn_approved_denied"
-                            onClick={() => setValidateR(0)}
+                            className={`btn_approved_denied  ${
+                              btnDenied ? "" : "btn__denied"
+                            }`}
+                            onClick={handleBtnDenied}
                           >
                             <img src="/rechazado.png" alt="" />
                           </button>
@@ -488,7 +517,7 @@ const Results = () => {
                     className="d-flex align-items-center justify-content-center btn btn-secondary btn__register gap-2 text-uppercase"
                     onClick={handleDiagnostic}
                   >
-                    {t("results.analyze")}
+                    {t("results.Analyze")}
                     {diagnosticsLoading && <LoadingButton />}
                   </button>
                 )}

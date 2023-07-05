@@ -42,7 +42,7 @@ i18n
           },
           doctors: {
             approved: "Approved",
-            rejected: "Rejected"
+            rejected: "Rejected",
           },
           login: {
             email: "Email",
@@ -58,7 +58,7 @@ i18n
             Country: "Country",
             passConfirm: "Password confirmation",
             success: "User successfully register in our system",
-            differentPassword: "Its different password"
+            differentPassword: "Its different password",
           },
           contact: {
             title: "Contact us for more information",
@@ -74,13 +74,37 @@ i18n
             name: "Name of patient",
             validate: "Validate Results",
             btn: "Save",
-            comments: "Comments",
-            analyze: "Analyze",
-            createPatient: "Create"
+            imgAlert: "Invalid image",
+            comments: "comments",
+            Analyze: "Analyze",
+            alert: "Please select all that is requested",
+            succesAnalyze: "Diagnostic was executed successfully",
+            btnImg: "Upload file",
+          },
+          patientModal: {
+            title: "Create Patient",
+            name: "Name",
+            lastname: "Lastname",
+            gender: "Gender",
+            country: "Country",
+            email: "Email",
+            dateBirth: "Date of birth",
+            create: "Create",
+          },
+          register: {
+            date: "Date",
+            Results: "Results",
+            iaR: "AI results",
+            expert: "Expert verification",
+            positive: "Positive probability",
+            negative: "Negative probability",
+            comment: "Expert comment",
+            btnWatch: "SEE MORE",
+            btnAccept: "Accept",
           },
           required: {
-            error: "Please fill this field"
-          }
+            error: "Please fill this field",
+          },
         },
       },
       es: {
@@ -108,7 +132,7 @@ i18n
           },
           doctors: {
             approved: "Aprobado",
-            rejected: "Rechazado"
+            rejected: "Rechazado",
           },
           login: {
             email: "Correo",
@@ -124,7 +148,7 @@ i18n
             Country: "pais",
             passConfirm: "confirmacion de contraseña",
             success: "El usuario se registro con exito",
-            differentPassword: "La contraseña es diferente"
+            differentPassword: "La contraseña es diferente",
           },
           contact: {
             title: "Contactanos para más información",
@@ -140,13 +164,36 @@ i18n
             name: "Nombre del paciente",
             validate: "Validar Resultados",
             btn: "Guardar",
-            comments: "Comentarios",
-            analyze: "Analizar",
-            createPatient: "Crear"
+            comments: "comentarios",
+            alert: "por favor selecciona todo lo que se le pide",
+            imgAlert: "Imagen no valida",
+            Analyze: "Analizar",
+            succesAnalyze: "Diagnostico fue ejecutado con exito",
+            btnImg: "Subir archivo",
+          },
+          patientModal: {
+            title: "Crear Paciente",
+            name: "Nombre",
+            lastname: "Apellido",
+            gender: "Genero",
+            country: "Pais",
+            email: "Correo",
+            dateBirth: "Fecha de nacimiento",
+            create: "Crear",
+            Analyze: "Analizar",
+          },
+          register: {
+            date: "Fecha",
+            Results: "Resultados",
+            iaR: "Resultado de la IA",
+            expert: "Verificacion de experto",
+            comment: "Comentario de experto",
+            btnWatch: "VER MAS",
+            btnAccept: "Aceptar",
           },
           required: {
-            error: "Por favor rellena este campo"
-          }
+            error: "Por favor rellena este campo",
+          },
         },
       },
     },

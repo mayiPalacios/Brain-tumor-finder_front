@@ -12,7 +12,7 @@ const Card = () => {
   const [totalItems, setTotalItems] = useState(0);
   const [showModal, setShowModal] = useState(false);
   const [viewM, setViewM] = useState<Idiagnostics>();
-  const [loading, setLoading] = useState(false)
+  const [loading, setLoading] = useState(false);
   const limit = 5;
   const { t, i18n } = useTranslation();
 
@@ -25,7 +25,7 @@ const Card = () => {
 
   useEffect(() => {
     const axiosRegisters = async () => {
-      setLoading(true)
+      setLoading(true);
       const response: IdiagnosticsContainer = await analysRegister(
         limit,
         offset
@@ -35,18 +35,18 @@ const Card = () => {
         setCardDiagnostic(response);
         setTotalItems(response.total);
       }
-      setLoading(false)
+      setLoading(false);
     };
     axiosRegisters();
   }, [offset]);
 
   const handlePageClick = (newOffset: number) => {
     if (newOffset < 0) {
-      return
+      return;
     }
 
     if (newOffset > totalItems) {
-      return
+      return;
     }
     setOffset(newOffset);
   };
@@ -148,27 +148,37 @@ const Card = () => {
 
               <div className="d-flex flex-column gap-2">
                 <div>
-                  <h6>Fecha:{viewM?.created_at}</h6>
-                  <h6>Resultado de la IA</h6>
-                  <span>
-                    probabilidad positiva:
-                    {viewM?.positive_probability &&
-                      viewM.positive_probability * 100}
-                  </span>
-                  <span>
-                    Probabilidad negativa:
-                    {viewM?.negative_probability &&
-                      viewM.negative_probability * 100}
-                  </span>
+                  <div className="pb-2">
+                    <h6>
+                      {t("register.date")} <span>{viewM?.created_at}</span>
+                    </h6>
+                  </div>
 
-                  <h6>
-                    Verificacion de experto:
+                  <h6>{t("register.iaR")}</h6>
+                  <div className="d-flex flex-column gap-2 pt-2">
+                    <span>
+                      {t("register.positive")}:{" "}
+                      {viewM?.positive_probability &&
+                        viewM.positive_probability * 100}
+                      {"%"}
+                    </span>
+                    <span>
+                      {t("register.negative")}:{" "}
+                      {viewM?.negative_probability &&
+                        viewM.negative_probability * 100}
+                      {"%"}
+                    </span>
+                  </div>
+
+                  <h6 className="pt-2 ">
+                    {t("register.expert")}:{" "}
                     {viewM?.result_by_doctor && viewM?.result_by_doctor == 0
-                      ? t('doctors.rejected')
-                      : t('doctors.approved')
-                    }
+                      ? t("doctors.rejected")
+                      : t("doctors.approved")}
                   </h6>
-                  <p>Comentario de experto:{viewM?.remark && viewM.remark}</p>
+
+                  <h6 className="pt-1 ">{t("register.comment")}:</h6>
+                  <p>{viewM?.remark && viewM.remark}</p>
                 </div>
               </div>
             </div>
@@ -177,7 +187,7 @@ const Card = () => {
                 className="btn btn-secondary  btn__register"
                 onClick={handleCloseModal}
               >
-                Aceptar
+                {t("register.btnAccept")}
               </button>
             </div>
           </section>
@@ -188,11 +198,11 @@ const Card = () => {
         <RenderPageNumber />
       </div>
 
-      {loading ?
+      {loading ? (
         <div className="d-flex justify-content-center">
           <LoadingScreen />
         </div>
-        :
+      ) : (
         <div className="position-relative row justify-content-center gap-4">
           {cardDiagnostic &&
             cardDiagnostic.items.map((diagnostic) => (
@@ -210,27 +220,37 @@ const Card = () => {
                   />
                 </div>
 
-                <div className="card-body d-flex flex-column justify-content-center align-items-center">
-                  <div className="d-flex flex-column justify-content-center align-items-center">
+                <div className="card-body d-flex flex-column justify-content-center align-items-center  gap-3">
+                  <div className="d-flex flex-column justify-content-center align-items-center  gap-2">
                     <h3>
                       {diagnostic.patient.first_name}{" "}
                       {diagnostic.patient.last_name}
                     </h3>
                     <span>{diagnostic.created_at}</span>
-                    <span>{diagnostic.result_by_doctor ? t('doctors.approved') : t('doctors.rejected')}</span>
-                    <span>resultados:{diagnostic.positive_probability}</span>
+                    <span>
+                      {diagnostic.result_by_doctor
+                        ? t("doctors.approved")
+                        : t("doctors.rejected")}
+                    </span>
+                    <span>
+                      {" "}
+                      {t("register.Results")}:
+                      {diagnostic.positive_probability &&
+                        diagnostic.positive_probability * 100}{" "}
+                      {"%"}
+                    </span>
                   </div>
                   <button
                     className="btn btn-primary"
                     onClick={() => handleViewMore(diagnostic)}
                   >
-                    VER MAS
+                    {t("register.btnWatch")}
                   </button>
                 </div>
               </div>
             ))}
         </div>
-      }
+      )}
     </div>
   );
 };
