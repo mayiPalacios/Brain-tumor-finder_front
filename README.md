@@ -11,8 +11,8 @@ https://btf-image-analyzer-api-production.up.railway.app/docs
 
  primero instalar node con 
 
-    ### npm i
+     npm i
 
 luego para correr el proyecto en local
 
-   ### npm run dev 
+    npm run dev 
