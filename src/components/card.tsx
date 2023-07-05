@@ -18,6 +18,7 @@ const Card = () => {
 
   useEffect(() => {
     const { language } = navigator || window.navigator;
+    localStorage.setItem("lan", language);
     if (language) {
       i18n.changeLanguage(language);
     }

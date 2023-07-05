@@ -31,6 +31,7 @@ export const postContactUs = async (contactUsDto: IContactUsPost) => {
 
 export const postRegister = async (userD: Isingup) => {
   const lan = localStorage.getItem("lan");
+  console.log(lan);
   const req = await post<IsingupSucces, Isingup>(
     `https://btf-image-analyzer-api-production.up.railway.app/api/v1/sign-up?lan=${lan}`,
     userD

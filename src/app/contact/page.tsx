@@ -11,32 +11,48 @@ import useLoading from "@/hooks/useLoader";
 import { InputError } from "@/interfaces/input-error";
 import { LoadingButton } from "@/components/loading-button";
 
-const Page = ({ }) => {
+const Page = ({}) => {
   const { t, i18n } = useTranslation();
-  const [subject, setSubject] = useState<InputError>({ value: "", isCorrect: true });
-  const [content, setContent] = useState<InputError>({ value: "", isCorrect: true });
+  const [subject, setSubject] = useState<InputError>({
+    value: "",
+    isCorrect: true,
+  });
+  const [content, setContent] = useState<InputError>({
+    value: "",
+    isCorrect: true,
+  });
   const [name, setName] = useState<InputError>({ value: "", isCorrect: true });
-  const [email, setEmail] = useState<InputError>({ value: "", isCorrect: true });
+  const [email, setEmail] = useState<InputError>({
+    value: "",
+    isCorrect: true,
+  });
   const [toggleHandler, loading, error, resetError] = useLoading(
     async (event: React.FormEvent<HTMLFormElement>) => {
       event.preventDefault();
       if (!(subject.value && email.value && name.value && content.value)) {
-        setName({ value: name.value, isCorrect: !!name.value })
-        setEmail({ value: email.value, isCorrect: !!email.value })
-        setSubject({ value: subject.value, isCorrect: !!subject.value })
-        setContent({ value: content.value, isCorrect: !!content.value })
+        setName({ value: name.value, isCorrect: !!name.value });
+        setEmail({ value: email.value, isCorrect: !!email.value });
+        setSubject({ value: subject.value, isCorrect: !!subject.value });
+        setContent({ value: content.value, isCorrect: !!content.value });
         return;
       }
 
-      if (!(subject.isCorrect && email.isCorrect && name.isCorrect && content.isCorrect)) {
-        return
+      if (
+        !(
+          subject.isCorrect &&
+          email.isCorrect &&
+          name.isCorrect &&
+          content.isCorrect
+        )
+      ) {
+        return;
       }
 
       const emailToSent: IContactUsPost = {
         content: content.value,
         subject: subject.value,
         email: email.value,
-        name: name.value
+        name: name.value,
       };
       const response = await postContactUs(emailToSent);
       handleOnSuccess(response.message);
@@ -45,6 +61,7 @@ const Page = ({ }) => {
 
   useEffect(() => {
     const { language } = navigator || window.navigator;
+    localStorage.setItem("lan", language);
     if (language) {
       i18n.changeLanguage(language);
     }
@@ -56,7 +73,7 @@ const Page = ({ }) => {
       icon: "error",
       confirmButtonText: "Accept",
     });
-    resetError()
+    resetError();
   };
 
   const handleOnSuccess = (message: string) => {
@@ -65,11 +82,11 @@ const Page = ({ }) => {
       icon: "success",
       confirmButtonText: "Accept",
     });
-    resetError()
-    setName({ value: "", isCorrect: true })
-    setEmail({ value: "", isCorrect: true })
-    setSubject({ value: "", isCorrect: true })
-    setContent({ value: "", isCorrect: true })
+    resetError();
+    setName({ value: "", isCorrect: true });
+    setEmail({ value: "", isCorrect: true });
+    setSubject({ value: "", isCorrect: true });
+    setContent({ value: "", isCorrect: true });
   };
 
   if (error) {
@@ -106,10 +123,15 @@ const Page = ({ }) => {
                     className="form-control"
                     id="username"
                     onChange={(e) => {
-                      setName({ value: e.target.value, isCorrect: !!e.target.value })
+                      setName({
+                        value: e.target.value,
+                        isCorrect: !!e.target.value,
+                      });
                     }}
                   />
-                  <p className="error__message">{!name.isCorrect && t("required.error")}</p>
+                  <p className="error__message">
+                    {!name.isCorrect && t("required.error")}
+                  </p>
                 </div>
                 <div className={`mb-3 ${email.isCorrect ? "" : "error"}`}>
                   <label htmlFor="email" className="form-label">
@@ -120,10 +142,15 @@ const Page = ({ }) => {
                     className="form-control"
                     id="email"
                     onChange={(e) => {
-                      setEmail({ value: e.target.value, isCorrect: !!e.target.value })
+                      setEmail({
+                        value: e.target.value,
+                        isCorrect: !!e.target.value,
+                      });
                     }}
                   />
-                  <p className="error__message">{!email.isCorrect && t("required.error")}</p>
+                  <p className="error__message">
+                    {!email.isCorrect && t("required.error")}
+                  </p>
                 </div>
                 <div className={`mb-3 ${subject.isCorrect ? "" : "error"}`}>
                   <label htmlFor="subject" className="form-label">
@@ -134,10 +161,15 @@ const Page = ({ }) => {
                     className="form-control"
                     id="subject"
                     onChange={(e) => {
-                      setSubject({ value: e.target.value, isCorrect: !!e.target.value })
+                      setSubject({
+                        value: e.target.value,
+                        isCorrect: !!e.target.value,
+                      });
                     }}
                   />
-                  <p className="error__message">{!subject.isCorrect && t("required.error")}</p>
+                  <p className="error__message">
+                    {!subject.isCorrect && t("required.error")}
+                  </p>
                 </div>
                 <div className={`mb-3 ${content.isCorrect ? "" : "error"}`}>
                   <label htmlFor="message" className="form-label">
@@ -148,12 +180,20 @@ const Page = ({ }) => {
                     id="message"
                     rows={5}
                     onChange={(e) => {
-                      setContent({ value: e.target.value, isCorrect: !!e.target.value })
+                      setContent({
+                        value: e.target.value,
+                        isCorrect: !!e.target.value,
+                      });
                     }}
                   />
-                  <p className="error__message">{!content.isCorrect && t("required.error")}</p>
+                  <p className="error__message">
+                    {!content.isCorrect && t("required.error")}
+                  </p>
                 </div>
-                <button type="submit" className="btn btn__contact__us d-flex align-items-center justify-content-center gap-2 text-uppercase">
+                <button
+                  type="submit"
+                  className="btn btn__contact__us d-flex align-items-center justify-content-center gap-2 text-uppercase"
+                >
                   {t("contact.btn")}
                   {loading && <LoadingButton />}
                 </button>
