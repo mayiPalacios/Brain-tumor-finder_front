@@ -5,13 +5,44 @@
 @import "./components/contact";
 @import "./components/try";
 @import "./components/login";
-@import "./components/alert";
 @import "./components/card";
 @import "./components/register";
+@import "./components/loading";
+@import "./components/loading-button.scss";
 
 body {
   background-color: #010431;
 }
 label {
   color: #f7b114;
+}
+
+.alert-input {
+  display: none;
+}
+
+@media (max-width: 972px) {
+  .hideImage {
+    display: none;
+  }
+  .respon {
+    height: 100%;
+    width: 100%;
+    display: flex;
+    align-items: center;
+    justify-content: center;
+    margin-top: 25vh;
+  }
+}
+
+.btn__denied {
+  /* Estilos cuando el botón está activo (haciendo clic) */
+  background-color: green;
+  border-radius: 50%;
+}
+
+.btn_approved {
+  /* Estilos cuando el botón está activo (haciendo clic) */
+  background-color: green;
+  border-radius: 50%;
 }

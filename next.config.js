@@ -8,7 +8,14 @@ const nextConfig = {
       "www.signpost.com",
       "encrypted-tbn2.gstatic.com",
       "as.com",
+      "media-manager.noticiasaominuto.com",
+      "res.cloudinary.com",
     ],
+  },
+  i18n: {
+    locales: ["en", "es"],
+    defaultLocale: "en",
+    localeDetection: false,
   },
 };
 

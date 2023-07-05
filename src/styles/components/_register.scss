@@ -8,6 +8,13 @@
     display: flex;
     justify-content: center;
     align-items: center;
+    margin-top: 12vh;
+  }
+}
+
+.container__img-reg {
+  img {
+    border-radius: 14px;
   }
 }
 
@@ -39,4 +46,41 @@
 .btn__register {
   width: 8vw;
   background-color: #25324d;
+}
+
+.form__login .btn__sign__up {
+  width: 8vw;
+}
+
+.container__viewMore {
+  background-position: center;
+  background-repeat: no-repeat;
+  width: 100%;
+
+  .container__select--file {
+    background-color: #fff;
+    border-radius: 32px;
+    height: 29vh;
+    width: 28vw;
+  }
+  .btn__file {
+    width: 8vw;
+  }
+}
+@media (max-width: 1351px) {
+  .container__select--file {
+    height: 40vh !important ;
+    width: 55vw !important;
+    input {
+      width: 32vw;
+    }
+  }
+  .btn__upload {
+    width: 12vw !important;
+  }
+}
+@media (max-width: 942px) {
+  .btn__upload {
+    width: 20vw !important;
+  }
 }

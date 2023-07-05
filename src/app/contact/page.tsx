@@ -1,9 +1,82 @@
+"use client";
 import Navbar from "@/components/navbar";
-import { memo } from "react";
+import { memo, useEffect, useState } from "react";
 import Image from "next/image";
 import { AuthProvider } from "@/contexts/AuthContext";
+import { useTranslation } from "react-i18next";
+import { IContactUsPost } from "@/interfaces/contact-us";
+import { postContactUs } from "@/tools/axiosMethod";
+import Swal from "sweetalert2";
+import useLoading from "@/hooks/useLoader";
+import { InputError } from "@/interfaces/input-error";
+import { LoadingButton } from "@/components/loading-button";
 
-const page = ({}) => {
+const Page = ({ }) => {
+  const { t, i18n } = useTranslation();
+  const [subject, setSubject] = useState<InputError>({ value: "", isCorrect: true });
+  const [content, setContent] = useState<InputError>({ value: "", isCorrect: true });
+  const [name, setName] = useState<InputError>({ value: "", isCorrect: true });
+  const [email, setEmail] = useState<InputError>({ value: "", isCorrect: true });
+  const [toggleHandler, loading, error, resetError] = useLoading(
+    async (event: React.FormEvent<HTMLFormElement>) => {
+      event.preventDefault();
+      if (!(subject.value && email.value && name.value && content.value)) {
+        setName({ value: name.value, isCorrect: !!name.value })
+        setEmail({ value: email.value, isCorrect: !!email.value })
+        setSubject({ value: subject.value, isCorrect: !!subject.value })
+        setContent({ value: content.value, isCorrect: !!content.value })
+        return;
+      }
+
+      if (!(subject.isCorrect && email.isCorrect && name.isCorrect && content.isCorrect)) {
+        return
+      }
+
+      const emailToSent: IContactUsPost = {
+        content: content.value,
+        subject: subject.value,
+        email: email.value,
+        name: name.value
+      };
+      const response = await postContactUs(emailToSent);
+      handleOnSuccess(response.message);
+    }
+  );
+
+  useEffect(() => {
+    const { language } = navigator || window.navigator;
+    if (language) {
+      i18n.changeLanguage(language);
+    }
+  }, [i18n]);
+
+  const handleOnFail = (message: string) => {
+    Swal.fire({
+      title: message,
+      icon: "error",
+      confirmButtonText: "Accept",
+    });
+    resetError()
+  };
+
+  const handleOnSuccess = (message: string) => {
+    Swal.fire({
+      title: message,
+      icon: "success",
+      confirmButtonText: "Accept",
+    });
+    resetError()
+    setName({ value: "", isCorrect: true })
+    setEmail({ value: "", isCorrect: true })
+    setSubject({ value: "", isCorrect: true })
+    setContent({ value: "", isCorrect: true })
+  };
+
+  if (error) {
+    handleOnFail(error.message);
+    return <></>;
+  }
+
   return (
     <AuthProvider>
       <div className="container__main">
@@ -11,9 +84,9 @@ const page = ({}) => {
         <main className="container__elements--contact">
           <div className="row justify-content-center align-items-center">
             <div className="col-md-12 text-center mb-4 container__title--contact">
-              <h1>Contactanos para más información</h1>
+              <h1>{t("contact.title")}</h1>
             </div>
-            <div className="col-md-4  ">
+            <div className="col-md-4">
               <Image
                 height={400}
                 width={500}
@@ -23,33 +96,66 @@ const page = ({}) => {
               />
             </div>
             <div className="col-md-5">
-              <form>
-                <div className="mb-3">
+              <form onSubmit={toggleHandler}>
+                <div className={`mb-3 ${name.isCorrect ? "" : "error"}`}>
                   <label htmlFor="username" className="form-label">
-                    Nombre de Usuario
+                    {t("contact.name")}
                   </label>
-                  <input type="text" className="form-control" id="username" />
+                  <input
+                    type="text"
+                    className="form-control"
+                    id="username"
+                    onChange={(e) => {
+                      setName({ value: e.target.value, isCorrect: !!e.target.value })
+                    }}
+                  />
+                  <p className="error__message">{!name.isCorrect && t("required.error")}</p>
                 </div>
-                <div className="mb-3">
+                <div className={`mb-3 ${email.isCorrect ? "" : "error"}`}>
                   <label htmlFor="email" className="form-label">
-                    Email
+                    {t("login.email")}
                   </label>
-                  <input type="email" className="form-control" id="email" />
+                  <input
+                    type="email"
+                    className="form-control"
+                    id="email"
+                    onChange={(e) => {
+                      setEmail({ value: e.target.value, isCorrect: !!e.target.value })
+                    }}
+                  />
+                  <p className="error__message">{!email.isCorrect && t("required.error")}</p>
                 </div>
-                <div className="mb-3">
+                <div className={`mb-3 ${subject.isCorrect ? "" : "error"}`}>
                   <label htmlFor="subject" className="form-label">
-                    Asunto
+                    {t("contact.subject")}
                   </label>
-                  <input type="text" className="form-control" id="subject" />
+                  <input
+                    type="text"
+                    className="form-control"
+                    id="subject"
+                    onChange={(e) => {
+                      setSubject({ value: e.target.value, isCorrect: !!e.target.value })
+                    }}
+                  />
+                  <p className="error__message">{!subject.isCorrect && t("required.error")}</p>
                 </div>
-                <div className="mb-3">
+                <div className={`mb-3 ${content.isCorrect ? "" : "error"}`}>
                   <label htmlFor="message" className="form-label">
-                    Mensaje
+                    {t("contact.message")}
                   </label>
-                  <textarea className="form-control" id="message" rows={5} />
+                  <textarea
+                    className="form-control"
+                    id="message"
+                    rows={5}
+                    onChange={(e) => {
+                      setContent({ value: e.target.value, isCorrect: !!e.target.value })
+                    }}
+                  />
+                  <p className="error__message">{!content.isCorrect && t("required.error")}</p>
                 </div>
-                <button type="submit" className="btn btn-primary">
-                  Enviar
+                <button type="submit" className="btn btn__contact__us d-flex align-items-center justify-content-center gap-2 text-uppercase">
+                  {t("contact.btn")}
+                  {loading && <LoadingButton />}
                 </button>
               </form>
             </div>
@@ -60,4 +166,4 @@ const page = ({}) => {
   );
 };
 
-export default memo(page);
+export default memo(Page);
