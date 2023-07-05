@@ -4,6 +4,7 @@ import { analysRegister } from "@/tools/axiosMethod";
 import { useEffect, useState } from "react";
 import Image from "next/image";
 import { useTranslation } from "react-i18next";
+import { LoadingScreen } from "./loading-screen";
 
 const Card = () => {
   const [cardDiagnostic, setCardDiagnostic] = useState<IdiagnosticsContainer>();
@@ -11,12 +12,12 @@ const Card = () => {
   const [totalItems, setTotalItems] = useState(0);
   const [showModal, setShowModal] = useState(false);
   const [viewM, setViewM] = useState<Idiagnostics>();
+  const [loading, setLoading] = useState(false);
   const limit = 5;
   const { t, i18n } = useTranslation();
 
   useEffect(() => {
     const { language } = navigator || window.navigator;
-
     if (language) {
       i18n.changeLanguage(language);
     }
@@ -24,6 +25,7 @@ const Card = () => {
 
   useEffect(() => {
     const axiosRegisters = async () => {
+      setLoading(true);
       const response: IdiagnosticsContainer = await analysRegister(
         limit,
         offset
@@ -33,6 +35,7 @@ const Card = () => {
         setCardDiagnostic(response);
         setTotalItems(response.total);
       }
+      setLoading(false);
     };
     axiosRegisters();
   }, [offset]);
@@ -191,57 +194,63 @@ const Card = () => {
         </div>
       )}
 
-      <div className="mt-3 mb-3 d-flex justify-content-center ">
+      <div className="mt-3 mb-3 d-flex justify-content-center">
         <RenderPageNumber />
       </div>
 
-      <div className="position-relative row justify-content-center gap-4">
-        {cardDiagnostic &&
-          cardDiagnostic.items.map((diagnostic) => (
-            <div
-              key={diagnostic.id}
-              className="card col-sm-6 col-md-4 col-lg-2 mb-4"
-              style={{ position: "relative", zIndex: "1" }}
-            >
-              <div className="container__img-reg d-flex justify-content-center align-items-center ">
-                <img
-                  className="card-img-top img img-thumbnail"
-                  src={diagnostic.image_url}
-                  alt="Imagen"
-                  style={{ width: "250px", height: "250px" }}
-                />
-              </div>
-
-              <div className="card-body d-flex flex-column justify-content-center align-items-center gap-3">
-                <div className="d-flex flex-column justify-content-center align-items-center gap-2">
-                  <h3>
-                    {diagnostic.patient.first_name}{" "}
-                    {diagnostic.patient.last_name}
-                  </h3>
-                  <span>{diagnostic.created_at}</span>
-                  <span>
-                    {diagnostic.result_by_doctor
-                      ? t("doctors.approved")
-                      : t("doctors.rejected")}
-                  </span>
-                  <span>
-                    {" "}
-                    {t("register.Results")}:
-                    {diagnostic.positive_probability &&
-                      diagnostic.positive_probability * 100}{" "}
-                    {"%"}
-                  </span>
+      {loading ? (
+        <div className="d-flex justify-content-center">
+          <LoadingScreen />
+        </div>
+      ) : (
+        <div className="position-relative row justify-content-center gap-4">
+          {cardDiagnostic &&
+            cardDiagnostic.items.map((diagnostic) => (
+              <div
+                key={diagnostic.id}
+                className="card col-sm-6 col-md-4 col-lg-2 mb-4"
+                style={{ position: "relative", zIndex: "1" }}
+              >
+                <div className="container__img-reg d-flex justify-content-center align-items-center ">
+                  <img
+                    className="card-img-top img img-thumbnail"
+                    src={diagnostic.image_url}
+                    alt="Imagen"
+                    style={{ width: "250px", height: "250px" }}
+                  />
                 </div>
-                <button
-                  className="btn btn-primary"
-                  onClick={() => handleViewMore(diagnostic)}
-                >
-                  {t("register.btnWatch")}
-                </button>
+
+                <div className="card-body d-flex flex-column justify-content-center align-items-center  gap-3">
+                  <div className="d-flex flex-column justify-content-center align-items-center  gap-2">
+                    <h3>
+                      {diagnostic.patient.first_name}{" "}
+                      {diagnostic.patient.last_name}
+                    </h3>
+                    <span>{diagnostic.created_at}</span>
+                    <span>
+                      {diagnostic.result_by_doctor
+                        ? t("doctors.approved")
+                        : t("doctors.rejected")}
+                    </span>
+                    <span>
+                      {" "}
+                      {t("register.Results")}:
+                      {diagnostic.positive_probability &&
+                        diagnostic.positive_probability * 100}{" "}
+                      {"%"}
+                    </span>
+                  </div>
+                  <button
+                    className="btn btn-primary"
+                    onClick={() => handleViewMore(diagnostic)}
+                  >
+                    {t("register.btnWatch")}
+                  </button>
+                </div>
               </div>
-            </div>
-          ))}
-      </div>
+            ))}
+        </div>
+      )}
     </div>
   );
 };

@@ -10,12 +10,19 @@ import useAuth from "@/hooks/useAuth";
 import { useEffect } from "react";
 import { useTranslation } from "react-i18next";
 import useLoading from "@/hooks/useLoader";
-import { LoadingScreen } from "@/components/loading";
 import Swal from "sweetalert2";
+import { InputError } from "@/interfaces/input-error";
+import { LoadingButton } from "@/components/loading-button";
 
 const Page = ({}) => {
-  const [email, setEmail] = useState("");
-  const [password, setPassword] = useState("");
+  const [email, setEmail] = useState<InputError>({
+    value: "",
+    isCorrect: true,
+  });
+  const [password, setPassword] = useState<InputError>({
+    value: "",
+    isCorrect: true,
+  });
   const isLoggedIn = useAuth();
   const [handleLogin, loading, error, resetError] = useLoading(
     async (event: React.FormEvent<HTMLFormElement>) => {
@@ -24,9 +31,19 @@ const Page = ({}) => {
         return;
       }
 
+      if (!(email.value && password.value)) {
+        setPassword({ value: password.value, isCorrect: !!password.value });
+        setEmail({ value: email.value, isCorrect: !!email.value });
+        return;
+      }
+
+      if (!(password.isCorrect && email.isCorrect)) {
+        return;
+      }
+
       const formData = new FormData();
-      formData.append("username", email);
-      formData.append("password", password);
+      formData.append("username", email.value);
+      formData.append("password", password.value);
       const language = localStorage.getItem("lan");
       const response: IloginSuccess | undefined = await postLogin(
         formData,
@@ -81,7 +98,7 @@ const Page = ({}) => {
           <div className="row m-0">
             <div className="hideImage col-md-6 p-0">
               <div
-                className="  d-flex align-items-center justify-content-center"
+                className="d-flex align-items-center justify-content-center"
                 style={{ height: "100vh", width: "50vw" }}
               >
                 <div
@@ -112,30 +129,55 @@ const Page = ({}) => {
             </div>
             <div className="respon col-md-6 p-0">
               <div className="d-flex align-items-center justify-content-center h-100">
-                <form className="form__login   gap-4" onSubmit={handleLogin}>
+                <form className="form__login gap-4" onSubmit={handleLogin}>
                   <div className="w-100 d-flex align-items-center justify-content-center">
                     <h2 className="">{t("login.login")}</h2>
                   </div>
 
-                  <label htmlFor="">{t("login.email")}</label>
-                  <input
-                    type="email"
-                    style={{ padding: "6px, 9px, 6px, 9px", width: "501px" }}
-                    onChange={(e) => {
-                      setEmail(e.target.value);
-                    }}
-                  />
-                  <label htmlFor="">{t("login.password")}</label>
-                  <input
-                    type="password"
-                    onChange={(e) => {
-                      setPassword(e.target.value);
-                    }}
-                    style={{ padding: "6px, 9px, 6px, 9px", width: "501px" }}
-                  />
+                  <div
+                    className={`d-flex flex-column  justify-content-center ${
+                      email.isCorrect ? "" : "error"
+                    }`}
+                  >
+                    <label htmlFor="">{t("login.email")}</label>
+                    <input
+                      type="email"
+                      style={{ padding: "6px, 9px, 6px, 9px", width: "501px" }}
+                      onChange={(e) => {
+                        setEmail({
+                          value: e.target.value,
+                          isCorrect: !!e.target.value,
+                        });
+                      }}
+                    />
+                    <p className="error__message">
+                      {!email.isCorrect && t("required.error")}
+                    </p>
+                  </div>
+                  <div
+                    className={`d-flex flex-column  justify-content-center ${
+                      password.isCorrect ? "" : "error"
+                    }`}
+                  >
+                    <label htmlFor="">{t("login.password")}</label>
+                    <input
+                      type="password"
+                      onChange={(e) => {
+                        setPassword({
+                          value: e.target.value,
+                          isCorrect: !!e.target.value,
+                        });
+                      }}
+                      style={{ padding: "6px, 9px, 6px, 9px", width: "501px" }}
+                    />
+                    <p className="error__message">
+                      {!password.isCorrect && t("required.error")}
+                    </p>
+                  </div>
                   <div className="w-100 d-flex align-items-center justify-content-center">
-                    <button className="btn btn__login">
-                      {!loading ? t("login.btn") : <LoadingScreen />}
+                    <button className="d-flex align-items-center justify-content-center btn btn__login gap-2 text-uppercase">
+                      {t("login.btn")}
+                      {loading && <LoadingButton />}
                     </button>
                   </div>
                 </form>

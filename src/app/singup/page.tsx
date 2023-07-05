@@ -10,18 +10,19 @@ import useAuth from "@/hooks/useAuth";
 
 import { useTranslation } from "react-i18next";
 import useLoading from "@/hooks/useLoader";
-import { LoadingScreen } from "@/components/loading";
+import { InputError } from "@/interfaces/input-error";
+import { LoadingButton } from "@/components/loading-button";
 
-const Page = ({}) => {
+const Page = ({ }) => {
   const { t, i18n } = useTranslation();
-  const [email, setEmail] = useState("");
-  const [password, setPassword] = useState("");
-  const [firstName, setName] = useState("");
-  const [lastname, setLname] = useState("");
+  const [email, setEmail] = useState<InputError>({ value: "", isCorrect: true });
+  const [password, setPassword] = useState<InputError>({ value: "", isCorrect: true });
+  const [firstName, setName] = useState<InputError>({ value: "", isCorrect: true });
+  const [lastname, setLname] = useState<InputError>({ value: "", isCorrect: true });
   const [correctPass, setCorrectPass] = useState(false);
-  const [carnet, setCarnet] = useState("");
-  const [country, setCountry] = useState("");
-  const [confirmPass, setConfirmP] = useState("");
+  const [carnet, setCarnet] = useState<InputError>({ value: "", isCorrect: true });
+  const [country, setCountry] = useState<InputError>({ value: "", isCorrect: true });
+  const [confirmPass, setConfirmP] = useState<InputError>({ value: "", isCorrect: true });
   const [
     handleClickRegister,
     registerLoading,
@@ -29,27 +30,55 @@ const Page = ({}) => {
     resetRegisterError,
   ] = useLoading(async (event: React.FormEvent<HTMLFormElement>) => {
     event.preventDefault();
-    if (password !== confirmPass) {
+    if (registerLoading) {
+      return
+    }
+
+    if (!(password.value &&
+      email.value &&
+      firstName.value &&
+      lastname.value &&
+      country.value)) {
+
+      setName({ value: firstName.value, isCorrect: !!firstName.value })
+      setLname({ value: lastname.value, isCorrect: !!lastname.value })
+      setEmail({ value: email.value, isCorrect: !!email.value })
+      setPassword({ value: password.value, isCorrect: !!password.value })
+      setCountry({ value: country.value, isCorrect: !!country.value })
+      setConfirmP({ value: confirmPass.value, isCorrect: !!confirmPass.value })
+      setCarnet({ value: carnet.value, isCorrect: !!carnet.value })
+      return;
+    }
+
+    if (!(password.isCorrect &&
+      email.isCorrect &&
+      firstName.isCorrect &&
+      lastname.isCorrect &&
+      country.isCorrect)) {
+      return
+    }
+
+    if (password.value !== confirmPass.value) {
       return setCorrectPass(true);
     }
 
     const user: Isingup = {
-      email: email,
-      first_name: firstName,
-      last_name: lastname,
-      carnet: carnet,
-      country: country,
-      password: password,
+      email: email.value,
+      first_name: firstName.value,
+      last_name: lastname.value,
+      carnet: carnet.value,
+      country: country.value,
+      password: password.value,
     };
 
     await postRegister(user);
     handleOnRegisterSuccess(t("signup.success"));
-    setEmail("");
-    setName("");
-    setLname("");
-    setCountry("");
-    setPassword("");
-    setConfirmP("");
+    setEmail({ value: "", isCorrect: true });
+    setName({ value: "", isCorrect: true });
+    setLname({ value: "", isCorrect: true });
+    setCountry({ value: "", isCorrect: true });
+    setPassword({ value: "", isCorrect: true });
+    setConfirmP({ value: "", isCorrect: true });
   });
 
   const isLoggedIn = useAuth();
@@ -132,7 +161,7 @@ const Page = ({}) => {
             <div className="respon col-md-6 p-0">
               <div className="d-flex align-items-center justify-content-center h-100">
                 <form
-                  className="form__login   gap-4"
+                  className="form__login gap-4"
                   onSubmit={handleClickRegister}
                 >
                   <div className="w-100 d-flex align-items-center justify-content-center">
@@ -140,88 +169,127 @@ const Page = ({}) => {
                   </div>
 
                   <div className="d-flex gap-5">
-                    <div className="d-flex flex-column gap-3">
-                      <label htmlFor="">{t("signup.firtsN")}</label>
+                    <div className={`d-flex flex-column gap-3 ${firstName.isCorrect ? "" : "error"}`}>
+                      <label htmlFor="">{t("signup.firstN")}</label>
                       <input
-                        value={firstName}
+                        value={firstName.value}
                         type="text"
-                        onChange={(e) => setName(e.target.value)}
+                        onChange={(e) => {
+                          setName({
+                            value: e.target.value,
+                            isCorrect: !!e.target.value
+                          })
+                        }}
                       />
+                      <p className="error__message">{!firstName.isCorrect && t("required.error")}</p>
                     </div>
-                    <div className="d-flex flex-column gap-3">
+                    <div className={`d-flex flex-column gap-3 ${lastname.isCorrect ? "" : "error"}`}>
                       <label htmlFor="">{t("signup.lastN")}</label>
                       <input
-                        value={lastname}
+                        value={lastname.value}
                         type="text"
-                        onChange={(e) => setLname(e.target.value)}
+                        onChange={(e) => {
+                          setLname({
+                            value: e.target.value,
+                            isCorrect: !!e.target.value
+                          })
+                        }}
                       />
+                      <p className="error__message">{!lastname.isCorrect && t("required.error")}</p>
                     </div>
                   </div>
 
-                  <label htmlFor="">{t("login.email")}</label>
-                  <input
-                    type="email"
-                    value={email}
-                    onChange={(e) => setEmail(e.target.value)}
-                    style={{ padding: "6px, 9px, 6px, 9px", width: "501px" }}
-                  />
+                  <div className={`d-flex flex-column gap-3 ${email.isCorrect ? "" : "error"}`}>
+                    <label htmlFor="">{t("login.email")}</label>
+                    <input
+                      type="email"
+                      value={email.value}
+                      onChange={(e) => {
+                        setEmail({
+                          value: e.target.value,
+                          isCorrect: !!e.target.value
+                        })
+                      }}
+                      style={{ padding: "6px, 9px, 6px, 9px", width: "501px" }}
+                    />
+                    <p className="error__message">{!email.isCorrect && t("required.error")}</p>
+                  </div>
 
-                  <label htmlFor="">{t("signup.cards")}</label>
-                  <input
-                    type="text"
-                    value={carnet}
-                    style={{ padding: "6px, 9px, 6px, 9px", width: "501px" }}
-                    onChange={(e) => setCarnet(e.target.value)}
-                  />
+                  <div className={`d-flex flex-column gap-3 ${carnet.isCorrect ? "" : "error"}`}>
+                    <label htmlFor="">{t("signup.cards")}</label>
+                    <input
+                      type="text"
+                      value={carnet.value}
+                      style={{ padding: "6px, 9px, 6px, 9px", width: "501px" }}
+                      onChange={(e) => {
+                        setCarnet({
+                          value: e.target.value,
+                          isCorrect: !!e.target.value
+                        })
+                      }}
+                    />
+                    <p className="error__message">{!carnet.isCorrect && t("required.error")}</p>
+                  </div>
 
-                  <div className="d-flex flex-column gap-3">
+                  <div className={`d-flex flex-column gap-3 ${country.isCorrect ? "" : "error"}`}>
                     <label htmlFor="">{t("signup.Country")}</label>
                     <input
                       type="text"
-                      value={country}
+                      value={country.value}
                       style={{ padding: "6px, 9px, 6px, 9px", width: "501px" }}
                       onChange={(e) => {
-                        setCountry(e.target.value);
+                        setCountry({
+                          value: e.target.value,
+                          isCorrect: !!e.target.value
+                        })
                       }}
                     />
+                    <p className="error__message">{!country.isCorrect && t("required.error")}</p>
                   </div>
 
                   <div className="d-flex gap-5">
-                    <div className="d-flex flex-column gap-3">
+                    <div className={`d-flex flex-column gap-3 ${password.isCorrect ? "" : "error"}`}>
                       <label htmlFor="">{t("login.password")}</label>
                       <input
                         type="password"
-                        value={password}
+                        value={password.value}
                         minLength={4}
-                        onChange={(e) => setPassword(e.target.value)}
+                        onChange={(e) => {
+                          setPassword({
+                            value: e.target.value,
+                            isCorrect: !!e.target.value
+                          })
+                        }}
                         required
                       />
+                      <p className="error__message">{!password.isCorrect && t("required.error")}</p>
                     </div>
-                    <div className="d-flex flex-column gap-3">
+
+                    <div className={`d-flex flex-column gap-3 ${confirmPass.isCorrect ? "" : "error"}`}>
                       <label htmlFor="">{t("signup.passConfirm")}</label>
                       <input
                         type="password"
-                        value={confirmPass}
+                        value={confirmPass.value}
                         minLength={4}
-                        onChange={(e) => setConfirmP(e.target.value)}
+                        onChange={(e) => {
+                          setConfirmP({
+                            value: e.target.value,
+                            isCorrect: !!e.target.value
+                          })
+                        }}
                         required
                       />
-                      <p
-                        style={{ color: "#fff" }}
-                        className={` ${correctPass ? "" : "alert-input"}  `}
-                      >
-                        Its different password
+                      <p style={{ color: "#fff" }} className={`${correctPass ? "" : "alert-input error"}`}>
+                        {t("signup.differentPassword")}
                       </p>
+                      <p className="error__message">{!confirmPass.isCorrect && t("required.error")}</p>
                     </div>
                   </div>
 
                   <div className="w-100 d-flex align-items-center justify-content-center">
-                    <button className="btn btn__login" type="submit">
-                      {!registerLoading ? (
-                        t("header.signUp")
-                      ) : (
-                        <LoadingScreen />
-                      )}
+                    <button className="btn btn__login btn__sign__up d-flex align-items-center justify-content-center gap-2 text-uppercase" type="submit">
+                      {t("header.signUp")}
+                      {registerLoading && <LoadingButton />}
                     </button>
                   </div>
                 </form>

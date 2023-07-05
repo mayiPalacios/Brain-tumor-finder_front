@@ -1,7 +1,7 @@
 "use client";
 
 import Image from "next/image";
-import { useState, useEffect, FormEvent } from "react";
+import { useState, useEffect, FormEvent, useRef } from "react";
 import { Modal, Button, Form } from "react-bootstrap";
 import { MouseEvent } from "react";
 import axios from "axios";
@@ -15,9 +15,9 @@ import { IdiagnosticsResult } from "@/interfaces/evaluate";
 import useLoading from "@/hooks/useLoader";
 import { BASE_URL } from "@/constants/base-url.constant";
 import { Option } from "react-bootstrap-typeahead/types/types";
-import { LoadingScreen } from "./loading";
 import Swal from "sweetalert2";
 import { IfileValidate } from "@/interfaces/fileValidate";
+import { LoadingButton } from "./loading-button";
 
 const Results = () => {
   const [users, setUsers] = useState([]);
@@ -50,8 +50,9 @@ const Results = () => {
 
     const loginToken = localStorage.getItem("loginToken") || "";
     if (newReg.is_approved !== undefined && newReg.remark !== undefined) {
+      const language = localStorage.getItem("lan");
       await axios.patch(
-        `${BASE_URL}/diagnostics/${reg?.content.id}/evaluate`,
+        `${BASE_URL}/diagnostics/${reg?.content.id}/evaluate?lan=${language}`,
         newReg,
         {
           headers: { Authorization: `Bearer ${loginToken}` },
@@ -63,7 +64,7 @@ const Results = () => {
       Swal.fire({
         title: t("results.alert"),
         icon: "error",
-        confirmButtonText: "Accept",
+        confirmButtonText: t("register.btnAccept"),
       });
     }
   });
@@ -73,9 +74,14 @@ const Results = () => {
       event.preventDefault();
 
       const loginToken = localStorage.getItem("loginToken") || "";
-      const response = await axios.post(`${BASE_URL}/patients`, newUser, {
-        headers: { Authorization: `Bearer ${loginToken}` },
-      });
+      const language = localStorage.getItem("lan");
+      const response = await axios.post(
+        `${BASE_URL}/patients?lan=${language}`,
+        newUser,
+        {
+          headers: { Authorization: `Bearer ${loginToken}` },
+        }
+      );
       setShowModal(false);
       handleOnPatientSuccess(response.data.message);
     });
@@ -97,6 +103,14 @@ const Results = () => {
     }
 
     const loginToken = localStorage.getItem("loginToken") || "";
+    if (patient == undefined) {
+      Swal.fire({
+        title: "Por favor selecciona un paciente antes de continuar",
+        icon: "error",
+        confirmButtonText: t("register.btnAccept"),
+      });
+      return;
+    }
     const response = await axios.post(
       `${BASE_URL}/${patient["id"]}/analyze`,
       formData,
@@ -104,25 +118,30 @@ const Results = () => {
         headers: { Authorization: `Bearer ${loginToken}` },
       }
     );
-    handleOnDiagnosticSuccess("Diagnostic was executed successfully");
+    handleOnDiagnosticSuccess(`${t("results.succesAnalyze")}`);
     setReg(response.data);
     setAnalizerA(true);
   });
+  const timerRef = useRef<NodeJS.Timeout | null>(null);
 
   const [handleSearch] = useLoading(
     async (query: string, _: React.ChangeEvent<HTMLInputElement>) => {
       if (!query) {
         return;
       }
-
+      if (timerRef.current) {
+        clearTimeout(timerRef.current as NodeJS.Timeout);
+      }
       const loginToken = localStorage.getItem("loginToken") || "";
-      const response = await axios.get(
-        `${BASE_URL}/patients/search?q=${query}`,
-        {
-          headers: { Authorization: `Bearer ${loginToken}` },
-        }
-      );
-      setUsers(response.data);
+      timerRef.current = setTimeout(async () => {
+        const response = await axios.get(
+          `${BASE_URL}/patients/search?q=${query}`,
+          {
+            headers: { Authorization: `Bearer ${loginToken}` },
+          }
+        );
+        setUsers(response.data);
+      }, 3000);
     }
   );
 
@@ -191,7 +210,7 @@ const Results = () => {
       Swal.fire({
         title: t("results.imgAlert"),
         icon: "error",
-        confirmButtonText: "Accept",
+        confirmButtonText: t("register.btnAccept"),
       });
       resetResultError();
     }
@@ -205,7 +224,7 @@ const Results = () => {
     Swal.fire({
       title: message,
       icon: "error",
-      confirmButtonText: "Accept",
+      confirmButtonText: t("register.btnAccept"),
     });
     resetDiagnosticError();
   };
@@ -214,7 +233,7 @@ const Results = () => {
     Swal.fire({
       title: message,
       icon: "success",
-      confirmButtonText: "Accept",
+      confirmButtonText: t("register.btnAccept"),
     });
     setShowModal(false);
     resetDiagnosticError();
@@ -224,12 +243,15 @@ const Results = () => {
     handleOnDiagnosticFail(diagnosticError.message);
     return <></>;
   }
-
+  const today = new Date();
+  const dateString = `${today.getFullYear()}-${String(
+    today.getMonth() + 1
+  ).padStart(2, "0")}-${String(today.getDate()).padStart(2, "0")}`;
   const handleOnPatientFail = (message: string) => {
     Swal.fire({
       title: message,
       icon: "error",
-      confirmButtonText: "Accept",
+      confirmButtonText: t("register.btnAccept"),
     });
     resetPatientError();
   };
@@ -238,7 +260,7 @@ const Results = () => {
     Swal.fire({
       title: message,
       icon: "success",
-      confirmButtonText: "Accept",
+      confirmButtonText: t("register.btnAccept"),
     });
     resetPatientError();
   };
@@ -252,7 +274,7 @@ const Results = () => {
     Swal.fire({
       title: message,
       icon: "error",
-      confirmButtonText: "Accept",
+      confirmButtonText: t("register.btnAccept"),
     });
     resetResultError();
   };
@@ -261,7 +283,7 @@ const Results = () => {
     Swal.fire({
       title: message,
       icon: "success",
-      confirmButtonText: "Accept",
+      confirmButtonText: t("register.btnAccept"),
     });
     resetResultError();
   };
@@ -319,7 +341,7 @@ const Results = () => {
                   className="btn__file btn btn-primary"
                   onClick={handleModal}
                 >
-                  Subir archivo
+                  {t("results.btnImg")}
                 </button>
               </section>
             </div>
@@ -429,6 +451,7 @@ const Results = () => {
                             <Form.Control
                               type="date"
                               name="birthday"
+                              max={dateString}
                               onChange={handleInputChange}
                             />
                           </Form.Group>
@@ -438,11 +461,8 @@ const Results = () => {
                             type="submit"
                             className="mt-3"
                           >
-                            {!patientsLoading ? (
-                              `${t("patientModal.create")}`
-                            ) : (
-                              <LoadingScreen />
-                            )}
+                            {t("patientModal.create")}
+                            {patientsLoading && <LoadingButton />}
                           </Button>
                         </Form>
                       </Modal.Body>
@@ -485,22 +505,20 @@ const Results = () => {
               <div className="d-flex  align-items-center justify-content-center">
                 {analyzerA && (
                   <button
-                    className="btn btn-secondary  btn__register"
+                    className="d-flex align-items-center justify-content-center btn btn-secondary btn__register gap-2 text-uppercase"
                     onClick={handleUpdatePatientResult}
                   >
-                    {!resultLoading ? t("results.btn") : <LoadingScreen />}
+                    {t("results.btn")}
+                    {resultLoading && <LoadingButton />}
                   </button>
                 )}
                 {!analyzerA && (
                   <button
-                    className="btn btn-secondary  btn__register"
+                    className="d-flex align-items-center justify-content-center btn btn-secondary btn__register gap-2 text-uppercase"
                     onClick={handleDiagnostic}
                   >
-                    {!diagnosticsLoading ? (
-                      t("results.Analyze")
-                    ) : (
-                      <LoadingScreen />
-                    )}
+                    {t("results.Analyze")}
+                    {diagnosticsLoading && <LoadingButton />}
                   </button>
                 )}
               </div>
