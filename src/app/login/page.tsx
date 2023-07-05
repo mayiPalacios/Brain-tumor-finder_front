@@ -27,7 +27,11 @@ const Page = ({}) => {
       const formData = new FormData();
       formData.append("username", email);
       formData.append("password", password);
-      const response: IloginSuccess | undefined = await postLogin(formData);
+      const language = localStorage.getItem("lan");
+      const response: IloginSuccess | undefined = await postLogin(
+        formData,
+        language!
+      );
       if (response) {
         localStorage.setItem("loginToken", response.access_token);
         router.push("/results");
@@ -39,7 +43,7 @@ const Page = ({}) => {
 
   useEffect(() => {
     const { language } = navigator || window.navigator;
-
+    localStorage.setItem("lan", language);
     if (language) {
       i18n.changeLanguage(language);
     }

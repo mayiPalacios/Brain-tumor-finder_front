@@ -42,7 +42,7 @@ i18n
           },
           doctors: {
             approved: "Approved",
-            rejected: "Rejected"
+            rejected: "Rejected",
           },
           login: {
             email: "Email",
@@ -57,7 +57,7 @@ i18n
             cards: "Doctors cards",
             Country: "Country",
             passConfirm: "password confirmation",
-            success: "User successfully register in our system"
+            success: "User successfully register in our system",
           },
           contact: {
             title: "Contact us for more information",
@@ -74,6 +74,28 @@ i18n
             validate: "Validate Results",
             btn: "Save",
             comments: "comments",
+            Analyze: "Analyze",
+          },
+          patientModal: {
+            title: "Create Patient",
+            name: "Name",
+            lastname: "Lastname",
+            gender: "Gender",
+            country: "Country",
+            email: "Email",
+            dateBirth: "Date of birth",
+            create: "Create",
+          },
+          register: {
+            date: "Date",
+            Results: "Results",
+            iaR: "AI results",
+            expert: "Expert verification",
+            positive: "Positive probability",
+            negative: "Negative probability",
+            comment: "Expert comment",
+            btnWatch: "SEE MORE",
+            btnAccept: "Accept",
           },
         },
       },
@@ -102,7 +124,7 @@ i18n
           },
           doctors: {
             approved: "Aprobado",
-            rejected: "Rechazado"
+            rejected: "Rechazado",
           },
           login: {
             email: "Correo",
@@ -117,7 +139,7 @@ i18n
             cards: "credencial de doctor",
             Country: "pais",
             passConfirm: "confirmacion de contraseña",
-            success: "El usuario se registro con exito"
+            success: "El usuario se registro con exito",
           },
           contact: {
             title: "Contactanos para más información",
@@ -134,6 +156,26 @@ i18n
             validate: "Validar Resultados",
             btn: "Guardar",
             comments: "comentarios",
+          },
+          patientModal: {
+            title: "Crear Paciente",
+            name: "Nombre",
+            lastname: "Apellido",
+            gender: "Genero",
+            country: "Pais",
+            email: "Correo",
+            dateBirth: "Fecha de nacimiento",
+            create: "Crear",
+            Analyze: "Analizar",
+          },
+          register: {
+            date: "Fecha",
+            Results: "Resultados",
+            iaR: "Resultado de la IA",
+            expert: "Verificacion de experto",
+            comment: "Comentario de experto",
+            btnWatch: "VER MAS",
+            btnAccept: "Aceptar",
           },
         },
       },

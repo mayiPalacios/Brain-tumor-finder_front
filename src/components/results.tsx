@@ -24,6 +24,8 @@ const Results = () => {
   const [selected, setSelected] = useState<Option[]>([]);
   const [showModal, setShowModal] = useState(false);
   const [fileEnd, setFile] = useState<File>();
+  const [btnApproved, setApproved] = useState(false);
+  const [btnDenied, setDenied] = useState(true);
   const isnotLog = useAuthNot();
   const [comment, setComment] = useState<string>();
   const isLoggedIn = useAuth();
@@ -269,6 +271,19 @@ const Results = () => {
     return <></>;
   }
 
+  const handleBtnApproved = () => {
+    setApproved(true);
+    setDenied(true);
+    setValidateR(0);
+  };
+
+  const handleBtnDenied = () => {
+    setDenied(false);
+    setApproved(false);
+
+    setValidateR(1);
+  };
+
   return (
     <div className="container__try container__results d-flex justify-content-center align-items-center">
       {isLoggedIn ? (
@@ -353,12 +368,12 @@ const Results = () => {
 
                     <Modal show={showModal} onHide={() => setShowModal(false)}>
                       <Modal.Header closeButton>
-                        <Modal.Title>Crear paciente</Modal.Title>
+                        <Modal.Title>{t("patientModal.title")}</Modal.Title>
                       </Modal.Header>
                       <Modal.Body>
                         <Form onSubmit={handlePatient}>
                           <Form.Group controlId="formBasicFirstName">
-                            <Form.Label>Nombre</Form.Label>
+                            <Form.Label>{t("patientModal.name")}</Form.Label>
                             <Form.Control
                               type="text"
                               name="first_name"
@@ -367,7 +382,9 @@ const Results = () => {
                           </Form.Group>
 
                           <Form.Group controlId="formBasicLastName">
-                            <Form.Label>Apellido</Form.Label>
+                            <Form.Label>
+                              {t("patientModal.lastname")}
+                            </Form.Label>
                             <Form.Control
                               type="text"
                               name="last_name"
@@ -376,7 +393,7 @@ const Results = () => {
                           </Form.Group>
 
                           <Form.Group controlId="formBasicGender">
-                            <Form.Label>Género</Form.Label>
+                            <Form.Label>{t("patientModal.gender")}</Form.Label>
                             <Form.Control
                               as="select"
                               name="gender"
@@ -397,7 +414,7 @@ const Results = () => {
                           </Form.Group>
 
                           <Form.Group controlId="formBasicEmail">
-                            <Form.Label>Email</Form.Label>
+                            <Form.Label>{t("patientModal.email")}</Form.Label>
                             <Form.Control
                               type="email"
                               name="email"
@@ -406,7 +423,9 @@ const Results = () => {
                           </Form.Group>
 
                           <Form.Group controlId="formBasicBirthday">
-                            <Form.Label>Fecha de Nacimiento</Form.Label>
+                            <Form.Label>
+                              {t("patientModal.dateBirth")}
+                            </Form.Label>
                             <Form.Control
                               type="date"
                               name="birthday"
@@ -419,7 +438,11 @@ const Results = () => {
                             type="submit"
                             className="mt-3"
                           >
-                            {!patientsLoading ? "Crear" : <LoadingScreen />}
+                            {!patientsLoading ? (
+                              `${t("patientModal.create")}`
+                            ) : (
+                              <LoadingScreen />
+                            )}
                           </Button>
                         </Form>
                       </Modal.Body>
@@ -432,15 +455,19 @@ const Results = () => {
                         <span>{t("results.validate")}</span>
                         <div className="d-flex gap-2">
                           <button
-                            className="btn_approved_denied"
-                            onClick={() => setValidateR(1)}
+                            className={`btn_approved_denied  ${
+                              btnApproved ? "btn_approved" : ""
+                            }`}
+                            onClick={handleBtnApproved}
                           >
                             <img src="/aprobar.png" alt="" />
                           </button>
 
                           <button
-                            className="btn_approved_denied"
-                            onClick={() => setValidateR(0)}
+                            className={`btn_approved_denied  ${
+                              btnDenied ? "" : "btn__denied"
+                            }`}
+                            onClick={handleBtnDenied}
                           >
                             <img src="/rechazado.png" alt="" />
                           </button>
@@ -469,7 +496,11 @@ const Results = () => {
                     className="btn btn-secondary  btn__register"
                     onClick={handleDiagnostic}
                   >
-                    {!diagnosticsLoading ? "Analizar" : <LoadingScreen />}
+                    {!diagnosticsLoading ? (
+                      t("results.Analyze")
+                    ) : (
+                      <LoadingScreen />
+                    )}
                   </button>
                 )}
               </div>

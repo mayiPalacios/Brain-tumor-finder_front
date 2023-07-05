@@ -33,3 +33,15 @@ label {
     margin-top: 25vh;
   }
 }
+
+.btn__denied {
+  /* Estilos cuando el botón está activo (haciendo clic) */
+  background-color: green;
+  border-radius: 50%;
+}
+
+.btn_approved {
+  /* Estilos cuando el botón está activo (haciendo clic) */
+  background-color: green;
+  border-radius: 50%;
+}
