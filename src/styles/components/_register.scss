@@ -67,3 +67,20 @@
     width: 8vw;
   }
 }
+@media (max-width: 1351px) {
+  .container__select--file {
+    height: 40vh !important ;
+    width: 55vw !important;
+    input {
+      width: 32vw;
+    }
+  }
+  .btn__upload {
+    width: 12vw !important;
+  }
+}
+@media (max-width: 942px) {
+  .btn__upload {
+    width: 20vw !important;
+  }
+}

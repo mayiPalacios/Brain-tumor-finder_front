@@ -105,7 +105,7 @@ const Results = () => {
     const loginToken = localStorage.getItem("loginToken") || "";
     if (patient == undefined) {
       Swal.fire({
-        title: "Por favor selecciona un paciente antes de continuar",
+        title: t("results.alertPat"),
         icon: "error",
         confirmButtonText: t("register.btnAccept"),
       });
@@ -327,7 +327,7 @@ const Results = () => {
           {!showResults && (
             <div>
               <section className="container__select--file d-flex p-5 flex-column gap-4 ">
-                <h4>Elige el archivo</h4>
+                <h4>{t("results.selectFile")}</h4>
                 <div className="mt-1 mb-2">
                   <input
                     type="file"
@@ -338,7 +338,7 @@ const Results = () => {
                 </div>
 
                 <button
-                  className="btn__file btn btn-primary"
+                  className="btn__file btn__upload btn btn-primary"
                   onClick={handleModal}
                 >
                   {t("results.btnImg")}
@@ -360,7 +360,7 @@ const Results = () => {
                 </div>
               )}
 
-              <div className="d-flex gap-5">
+              <div className="container__analyze d-flex gap-5">
                 {imageURL && (
                   <img
                     height={400}
@@ -505,7 +505,7 @@ const Results = () => {
               <div className="d-flex  align-items-center justify-content-center">
                 {analyzerA && (
                   <button
-                    className="d-flex align-items-center justify-content-center btn btn-secondary btn__register gap-2 text-uppercase"
+                    className="d-flex align-items-center justify-content-center btn btn-secondary btn__register gap-2 text-uppercase btn__analy"
                     onClick={handleUpdatePatientResult}
                   >
                     {t("results.btn")}
@@ -514,7 +514,7 @@ const Results = () => {
                 )}
                 {!analyzerA && (
                   <button
-                    className="d-flex align-items-center justify-content-center btn btn-secondary btn__register gap-2 text-uppercase"
+                    className="d-flex btn__upload align-items-center justify-content-center btn btn-secondary btn__register gap-2 text-uppercase btn__analy"
                     onClick={handleDiagnostic}
                   >
                     {t("results.Analyze")}

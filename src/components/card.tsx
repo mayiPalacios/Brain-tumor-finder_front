@@ -184,7 +184,7 @@ const Card = () => {
             </div>
             <div className="d-flex  align-items-center justify-content-center">
               <button
-                className="btn btn-secondary  btn__register"
+                className="btn btn__upload btn-secondary  btn__register"
                 onClick={handleCloseModal}
               >
                 {t("register.btnAccept")}
