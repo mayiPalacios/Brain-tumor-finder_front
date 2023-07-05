@@ -297,14 +297,14 @@ const Results = () => {
   const handleBtnApproved = () => {
     setApproved(true);
     setDenied(true);
-    setValidateR(0);
+    setValidateR(1);
   };
 
   const handleBtnDenied = () => {
     setDenied(false);
     setApproved(false);
 
-    setValidateR(1);
+    setValidateR(0);
   };
 
   return (
